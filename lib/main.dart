@@ -7,6 +7,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Material App',
+      theme: ThemeData(
+        primaryColor: Color(0xFF8FD8D2)
+      ),
       home: Scaffold(
         appBar: AppBar(
           title: Text('Material App Bar'),
