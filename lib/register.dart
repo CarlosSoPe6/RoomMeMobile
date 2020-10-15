@@ -48,22 +48,63 @@ class _RegisterState extends State<Register> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(top: width/8),
+                        padding: EdgeInsets.only(top: width/6, bottom: width/8),
                         child: TextField(
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(0)
                             ),
                             fillColor: Colors.white,
-                            filled: true
+                            filled: true,
+                            labelText: 'Nombre'
+                          )                        
+                        )
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: width/8),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0)
+                            ),
+                            fillColor: Colors.white,
+                            filled: true,
+                            labelText: 'Apellidos'
                           )
+                        )
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: width/8),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0)
+                            ),
+                            fillColor: Colors.white,
+                            filled: true,
+                            labelText: 'Correo electrónico'
+                          )
+                        )
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: width/8),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0)
+                            ),
+                            fillColor: Colors.white,
+                            filled: true,
+                            labelText: 'Contraseña'                       
+                          ),
+                          obscureText: true,
                         )
                       ),
                       RaisedButton(
                         onPressed: (){
                           BlocProvider.of<MainBloc>(context).add(RegisterEvent());
                         },
-                        child: Text('Registrar'),
+                        child: Text('REGISTRAR'),
                       )
                     ]
                   )
