@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
       home: Login(),
       routes: {
         '/register': (context) => Register(),
-      });
+      }
+    );
   }
 }

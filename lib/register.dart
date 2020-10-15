@@ -9,7 +9,37 @@ class Register extends StatefulWidget {
   _RegisterState createState() => _RegisterState();
 }
 
+
 class _RegisterState extends State<Register> {
+
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _lastnameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  bool _passwordHidden = true;
+
+
+  register(BuildContext context) {
+    if (_formKey.currentState.validate()) {
+      print('Valid');
+      BlocProvider.of<MainBloc>(context).add(RegisterEvent(
+        name: _nameController.text,
+        lastname: _lastnameController.text,
+        email: _emailController.text,
+        password: _passwordController.text
+      ));
+    } else {
+      return Scaffold.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text("Complete el formulario"),
+          ),
+        );
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
 
@@ -45,68 +75,107 @@ class _RegisterState extends State<Register> {
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: width/8),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: width/6, bottom: width/8),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(0)
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: width/6, bottom: width/8),
+                          child: TextFormField(
+                            controller: _nameController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0)
+                              ),
+                              fillColor: Colors.white,
+                              filled: true,
+                              labelText: 'Nombre'
                             ),
-                            fillColor: Colors.white,
-                            filled: true,
-                            labelText: 'Nombre'
-                          )                        
-                        )
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: width/8),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(0)
-                            ),
-                            fillColor: Colors.white,
-                            filled: true,
-                            labelText: 'Apellidos'
+                            validator: (text) {
+                              if (text.isEmpty)
+                                return "Ingrese su nombre";
+                              else
+                                return null;
+                            }
                           )
-                        )
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: width/8),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(0)
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: width/8),
+                          child: TextFormField(
+                            controller: _lastnameController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0)
+                              ),
+                              fillColor: Colors.white,
+                              filled: true,
+                              labelText: 'Apellido'
                             ),
-                            fillColor: Colors.white,
-                            filled: true,
-                            labelText: 'Correo electrónico'
+                            validator: (text) {
+                              if (text.isEmpty)
+                                return "Ingrese su apellido";
+                              else
+                                return null;
+                            }
                           )
-                        )
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: width/8),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(0)
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: width/8),
+                          child: TextFormField(
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0)
+                              ),
+                              fillColor: Colors.white,
+                              filled: true,
+                              labelText: 'Correo electrónico'
                             ),
-                            fillColor: Colors.white,
-                            filled: true,
-                            labelText: 'Contraseña'                       
-                          ),
-                          obscureText: true,
+                            validator: (text) {
+                              if (text.isEmpty)
+                                return "Ingrese su correo electrónico";
+                              else
+                                return null;
+                            }
+                          )
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: width/8),
+                          child: TextFormField(
+                            controller: _passwordController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0)
+                              ),
+                              fillColor: Colors.white,
+                              filled: true,
+                              labelText: 'Contraseña',
+                              suffixIcon: IconButton(
+                                icon: Icon(_passwordHidden ? Icons.visibility_off : Icons.visibility),
+                                onPressed: () {
+                                  setState(() {
+                                    _passwordHidden = !_passwordHidden;
+                                  });
+                                }
+                              )
+                            ),
+                            obscureText: _passwordHidden,
+                            validator: (text) {
+                              if (text.isEmpty)
+                                return "Ingrese una contraseña";
+                              else
+                                return null;
+                            }
+                          )
+                        ),
+                        RaisedButton(
+                          onPressed: (){
+                            register(context);
+                          },
+                          child: Text('REGISTRAR'),
                         )
-                      ),
-                      RaisedButton(
-                        onPressed: (){
-                          BlocProvider.of<MainBloc>(context).add(RegisterEvent());
-                        },
-                        child: Text('REGISTRAR'),
-                      )
-                    ]
+                      ]
+                    )
                   )
                 )
               ]

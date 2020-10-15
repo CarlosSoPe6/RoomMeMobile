@@ -12,7 +12,7 @@ part 'custom_event.dart';
 part 'custom_state.dart';
 
 class MainBloc extends Bloc<CustomEvent, CustomState> {
-  final _link = "https://jsonplaceholder.typicode.com/users";
+  final _link = "http://localhost:3000/api/register/";
   List<User> _userList;
 
   MainBloc() : super(InitialState());
@@ -24,7 +24,10 @@ class MainBloc extends Bloc<CustomEvent, CustomState> {
     if (event is InitialEvent) {
       yield InitialState();
     } else if (event is RegisterEvent) {
-      yield LoadingState();
+      print(event.name);
+      print(event.lastname);
+      print(event.email);
+      print(event.name);
       await _getAllUsers();
       if (_userList.length > 0)
         yield ShowUsersState(usersList: _userList);
