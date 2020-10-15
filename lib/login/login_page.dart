@@ -1,3 +1,4 @@
+import 'package:RoomMeMobile/chat/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -70,7 +71,11 @@ class _LoginPageState extends State<LoginPage> {
             RaisedButton(
               child: Text("INICIAR SESIÓN"),
               color: Color(0xFFFEDCD2),
-              onPressed: (){}
+              onPressed: (){
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => Chat())
+                );
+              }
             ),
             SizedBox(height: 30,),
             Text("Crear una cuenta", style: TextStyle(color: Colors.lightBlue, decoration: TextDecoration.underline),)
