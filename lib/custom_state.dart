@@ -11,6 +11,8 @@ class InitialState extends CustomState {}
 
 class LoadingState extends CustomState {}
 
+class RegisteredState extends CustomState {}
+
 class ErrorState extends CustomState {
   final String error;
 

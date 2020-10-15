@@ -22,7 +22,6 @@ class _RegisterState extends State<Register> {
 
   register(BuildContext context) {
     if (_formKey.currentState.validate()) {
-      print('Valid');
       BlocProvider.of<MainBloc>(context).add(RegisterEvent(
         name: _nameController.text,
         lastname: _lastnameController.text,
@@ -66,7 +65,8 @@ class _RegisterState extends State<Register> {
                 ..showSnackBar(
                   SnackBar(content: Text("Successful registration")),
                 );
-            }
+            } else if(state is RegisterEvent)
+              Navigator.of(context).pushReplacementNamed('/home');
           },
           builder: (context, state) {
             return ListView(
@@ -173,6 +173,15 @@ class _RegisterState extends State<Register> {
                             register(context);
                           },
                           child: Text('REGISTRAR'),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: width/8),
+                          child: GestureDetector(
+                          child: Text('Iniciar sesión', style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline)),
+                          onTap: () {
+                            Navigator.of(context).pushReplacementNamed('/login');
+                          }
+                        )
                         )
                       ]
                     )

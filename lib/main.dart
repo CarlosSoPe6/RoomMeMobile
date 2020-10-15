@@ -2,6 +2,8 @@ import 'package:RoomMeMobile/login.dart';
 import 'package:RoomMeMobile/register.dart';
 import 'package:flutter/material.dart';
 
+import 'home.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -17,7 +19,9 @@ class MyApp extends StatelessWidget {
         ),
       home: Login(),
       routes: {
+        '/login': (context) => Login(),
         '/register': (context) => Register(),
+        '/home': (context) => Home()
       }
     );
   }
