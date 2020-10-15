@@ -1,25 +1,23 @@
+import 'package:RoomMeMobile/login.dart';
+import 'package:RoomMeMobile/register.dart';
 import 'package:flutter/material.dart';
- 
+
 void main() => runApp(MyApp());
- 
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Material App',
       theme: ThemeData(
-        primaryColor: Color(0xFF8FD8D2)
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Material App Bar'),
-        ),
-        body: Center(
-          child: Container(
-            child: Text('Hello World'),
+          primaryColor: Color(0xFF8FD8D2),
+          primaryTextTheme: TextTheme(
+            headline6: TextStyle(color: Colors.white)
           ),
+          buttonTheme: ButtonThemeData(buttonColor: Color(0xFFFEDCD2))
         ),
-      ),
-    );
+      home: Login(),
+      routes: {
+        '/register': (context) => Register(),
+      });
   }
 }
