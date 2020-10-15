@@ -4,3 +4,9 @@ part of 'user_bloc.dart';
 abstract class UserState {}
 
 class UserInitial extends UserState {}
+
+class UserFetchedState extends UserState {}
+
+class UserErrorState extends UserState {
+  String error;
+}
