@@ -15,7 +15,8 @@ class Login extends StatelessWidget {
             children: [
               MaterialButton(
                   child: Text('Ingresa'),
-                  onPressed: () => Navigator.of(context).pushNamed('/user')),
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed('/house/detail')),
               Text('Hello World'),
               GestureDetector(
                 child: Text('Crea una cuenta',

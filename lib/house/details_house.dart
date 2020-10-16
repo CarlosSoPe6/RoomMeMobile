@@ -1,5 +1,7 @@
 import 'package:RoomMeMobile/house/bloc/house_bloc.dart';
+import 'package:RoomMeMobile/models/house.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DetailsHouse extends StatefulWidget {
   @override
@@ -8,6 +10,218 @@ class DetailsHouse extends StatefulWidget {
 
 class _DetailsHouseState extends State<DetailsHouse> {
   HouseBloc _houseBloc;
+  String title = "";
+
+  Widget _houseView(BuildContext context, double width, House state) {
+    return Container(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            ClipRRect(
+              child: Image(
+                fit: BoxFit.fill,
+                image: NetworkImage(
+                  state.foto,
+                ),
+                width: width,
+                height: 150,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: Column(
+                children: [
+                  Text(
+                    state.description,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: width - 20,
+                          child: Text(
+                            "Dirección",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: width - 20,
+                          child: Text(
+                            state.addressLine,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: width - 20,
+                          child: Text(
+                            "Localidad",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: width - 20,
+                          child: Text(
+                            state.city,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: (width - 20) * 0.33,
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "C.P",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                state.zipCode,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: (width - 20) * 0.66,
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Tipo",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                state.type,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: (width - 20) * 0.33,
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Habitantes",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                "${state.roommatesCount}/${state.roommatesLimit}",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: (width - 20) * 0.66,
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Costo",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                "\$${state.cost.toString()}",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   void dispose() {
@@ -20,18 +234,45 @@ class _DetailsHouseState extends State<DetailsHouse> {
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(''),
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed('/house/edit', arguments: 10);
+        },
+        child: Icon(
+          Icons.settings,
         ),
-        body: Stack(
-          children: [
-            Image.network(''),
-            Container(
-              child: Column(
-                children: [Text("data1"), Text("data2")],
-              ),
-            )
-          ],
-        ));
+      ),
+      body: BlocProvider(
+        create: (BuildContext context) {
+          _houseBloc = HouseBloc()..add(HouseFetchEvent(hid: 10));
+          return _houseBloc;
+        },
+        child: BlocConsumer<HouseBloc, HouseState>(
+          listener: (context, state) {
+            if (state is HouseErrorState) {
+              Scaffold.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(content: Text("Error: ${state.error}")),
+                );
+            }
+          },
+          builder: (context, state) {
+            if (state is HouseFetchedState) {
+              title = state.house.title;
+              return _houseView(context, width, state.house);
+            }
+            return Container(
+                // child: Center(
+                //   child: CircularProgressIndicator(),
+                // ),
+                );
+          },
+        ),
+      ),
+    );
   }
 }
