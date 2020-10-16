@@ -14,13 +14,13 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   final _picker = ImagePicker();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _userLastnameController = TextEditingController();
+  final TextEditingController _userEmailController = TextEditingController();
+  final TextEditingController _userPhoneController = TextEditingController();
   String _photoPath = "";
   String _name = "";
   UserBloc _userBloc;
-  TextEditingController _userNameController = TextEditingController();
-  TextEditingController _userLastnameController = TextEditingController();
-  TextEditingController _userEmailController = TextEditingController();
-  TextEditingController _userPhoneController = TextEditingController();
 
   _displayPhotoDialog(BuildContext context) async {
     return await showDialog<Product>(
@@ -86,122 +86,127 @@ class _UserPageState extends State<UserPage> {
 
   Widget _userView(BuildContext context, double width) {
     return Center(
-      child: Column(
-        children: [
-          Padding(
-            child: Container(
-              width: width - 20,
-              child: Card(
-                  child: Column(
-                children: [
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 10),
-                      child: GestureDetector(
-                          onTap: () {
-                            _displayPhotoDialog(context);
-                          },
-                          child: ClipRRect(
-                            child: Image(
-                              height: 100,
-                              width: 100,
-                              image: NetworkImage(
-                                _photoPath,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              child: Container(
+                width: width - 20,
+                child: Card(
+                    child: Column(
+                  children: [
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: GestureDetector(
+                            onTap: () {
+                              _displayPhotoDialog(context);
+                            },
+                            child: ClipRRect(
+                              child: Image(
+                                height: 100,
+                                width: 100,
+                                image: NetworkImage(
+                                  _photoPath,
+                                ),
                               ),
-                            ),
-                            borderRadius: BorderRadius.circular(50),
-                          )),
+                              borderRadius: BorderRadius.circular(50),
+                            )),
+                      ),
                     ),
-                  ),
-                  // Text View
-                  Stack(
-                    children: [
-                      Padding(
-                          padding: EdgeInsets.only(top: 20),
-                          child: Center(
-                            child: Column(
-                              children: <Widget>[
-                                Text(_name,
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w700)),
-                              ],
-                            ),
-                          )),
-                      Padding(
-                        padding: EdgeInsets.only(top: 20, right: 0),
-                        child: IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () {
-                            _displayNameDialog(context);
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                  Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Container(
-                        width: width - 20,
-                        child: Column(
-                          children: [
-                            Text("Correo",
-                                style: TextStyle(fontWeight: FontWeight.w300)),
-                            TextField(
-                              controller: _userEmailController,
-                            )
-                          ],
-                        ),
-                      )),
-                  Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Container(
-                        width: width - 20,
-                        child: Column(
-                          children: [
-                            Text("Teléfono",
-                                style: TextStyle(fontWeight: FontWeight.w300)),
-                            TextField(
-                              controller: _userPhoneController,
-                            )
-                          ],
-                        ),
-                      ))
-                ],
-              )),
+                    // Text View
+                    Stack(
+                      children: [
+                        Padding(
+                            padding: EdgeInsets.only(top: 20),
+                            child: Center(
+                              child: Column(
+                                children: <Widget>[
+                                  Text(_name,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700)),
+                                ],
+                              ),
+                            )),
+                        Padding(
+                          padding: EdgeInsets.only(top: 20, right: 0),
+                          child: IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () {
+                              _displayNameDialog(context);
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                    Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Container(
+                          width: width - 20,
+                          child: Column(
+                            children: [
+                              Text("Correo",
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w300)),
+                              TextField(
+                                controller: _userEmailController,
+                              )
+                            ],
+                          ),
+                        )),
+                    Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Container(
+                          width: width - 20,
+                          child: Column(
+                            children: [
+                              Text("Teléfono",
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w300)),
+                              TextField(
+                                controller: _userPhoneController,
+                              )
+                            ],
+                          ),
+                        ))
+                  ],
+                )),
+              ),
+              padding: EdgeInsets.only(top: 10),
             ),
-            padding: EdgeInsets.only(top: 10),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Container(
-              width: width - 20,
-              child: Card(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Text(
-                    "Contactos de emergencia",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Container(
+                width: width - 20,
+                child: Card(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Text(
+                      "Contactos de emergencia",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Container(
-            child: SizedBox(
-              width: width - 20,
-              child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: 1,
-                itemBuilder: (context, index) {
-                  return new UserContactItem(
-                      index: index, name: 'Carlos Soto', phone: '1234567890');
-                },
+            Container(
+              child: SizedBox(
+                width: width - 20,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: 1,
+                  itemBuilder: (context, index) {
+                    return new UserContactItem(
+                        index: index, name: 'Carlos Soto', phone: '1234567890');
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
