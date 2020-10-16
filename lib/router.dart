@@ -5,6 +5,8 @@ import 'package:RoomMeMobile/register.dart';
 import 'package:RoomMeMobile/usuario/user.dart';
 import 'package:flutter/material.dart';
 
+import 'home.dart';
+
 Route<dynamic> buildRouter(RouteSettings settings) {
   switch (settings.name) {
     case '/login':
@@ -17,6 +19,12 @@ Route<dynamic> buildRouter(RouteSettings settings) {
       return MaterialPageRoute<void>(
         settings: settings,
         builder: (BuildContext context) => Register(),
+        fullscreenDialog: true,
+      );
+    case '/home':
+      return MaterialPageRoute<void>(
+        settings: settings,
+        builder: (BuildContext context) => Home(),
         fullscreenDialog: true,
       );
     case '/user':
