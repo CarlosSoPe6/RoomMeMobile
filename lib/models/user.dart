@@ -1,44 +1,51 @@
 import 'package:equatable/equatable.dart';
 
-class User extends Equatable  {
-	final int id;
-	final String name;
-	final String username;
-	final String email;
-	final String phone;
-	final String website;
+class User extends Equatable {
+  final int uid;
+  final String name;
+  final String lastName;
+  final String email;
+  final String photo;
+  final String phone;
 
-	User({this.id, this.name, this.username, this.email, this.phone, this.website});
+  User({
+    this.uid,
+    this.name,
+    this.lastName,
+    this.email,
+    this.photo,
+    this.phone,
+  });
 
-	factory User.fromJson(Map<String, dynamic> json) {
-		return User(
-			id: json['id'],
-			name: json['name'],
-			username: json['username'],
-			email: json['email'],
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      uid: json['uid'],
+      name: json['name'],
+      lastName: json['lastName'],
+      email: json['email'],
+      photo: json['photo'],
       phone: json['phone'],
-			website: json['website']
-		);
-	}
+    );
+  }
 
-	Map<String, dynamic> toJson() {
-		final Map<String, dynamic> data = new Map<String, dynamic>();
-		data['id'] = this.id;
-		data['name'] = this.name;
-		data['username'] = this.username;
-		data['email'] = this.email;
-		data['phone'] = this.phone;
-		data['website'] = this.website;
-		return data;
-	}
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['uid'] = this.uid;
+    data['name'] = this.name;
+    data['lastName'] = this.lastName;
+    data['email'] = this.email;
+    data['photo'] = this.photo;
+    data['phone'] = this.phone;
+    return data;
+  }
 
-	@override
-	List<Object> get props => [
-		this.id,
-		this.name,
-		this.username,
-		this.email,
-		this.phone,
-		this.website
-	];
+  @override
+  List<Object> get props => [
+        this.uid,
+        this.name,
+        this.lastName,
+        this.email,
+        this.photo,
+        this.phone,
+      ];
 }

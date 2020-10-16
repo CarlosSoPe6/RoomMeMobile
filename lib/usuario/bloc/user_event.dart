@@ -3,7 +3,10 @@ part of 'user_bloc.dart';
 @immutable
 abstract class UserEvent {}
 
-class UserFetchEvent extends UserEvent {}
+class UserFetchEvent extends UserEvent {
+  final int uid;
+  UserFetchEvent({this.uid});
+}
 
 class UserUpdateImage extends UserEvent {
   final File image;
