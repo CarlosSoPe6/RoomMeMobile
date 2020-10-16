@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
                 );
               _loginBloc.add(InitialEvent());
             }else if(state is LoginSuccessState){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Chat()));
+              Navigator.of(context).pushNamed('/user');
             }
           },
           builder: (context, state) {
@@ -111,7 +111,12 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     ),
                     SizedBox(height: 30,),
-                    Text("Crear una cuenta", style: TextStyle(color: Colors.lightBlue, decoration: TextDecoration.underline),)
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).pushNamed('/register');
+                      },
+                      child: Text("Crear una cuenta", style: TextStyle(color: Colors.lightBlue, decoration: TextDecoration.underline),)
+                    )
                   ]
               ),
                 ),
