@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
           primaryTextTheme:
               TextTheme(headline6: TextStyle(color: Colors.white)),
           buttonTheme: ButtonThemeData(buttonColor: Color(0xFFFEDCD2))),
-      initialRoute: '/login',
+      initialRoute: '/home',
       onGenerateRoute: buildRouter,
     );
   }
