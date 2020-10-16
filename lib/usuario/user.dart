@@ -249,7 +249,11 @@ class _UserPageState extends State<UserPage> {
           if (state is UserFetchedState) {
             return _userView(context, width);
           }
-          return Container();
+          return Container(
+              // child: Center(
+              //   child: CircularProgressIndicator(),
+              // ),
+              );
         }),
       ),
     );

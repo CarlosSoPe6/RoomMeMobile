@@ -1,4 +1,12 @@
+import 'dart:io';
+
+import 'package:RoomMeMobile/house/bloc/house_bloc.dart';
+import 'package:RoomMeMobile/models/house.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+enum Product { Galeria, Camara }
 
 class CreateHouse extends StatefulWidget {
   @override
@@ -6,14 +14,293 @@ class CreateHouse extends StatefulWidget {
 }
 
 class _CreateHouseState extends State<CreateHouse> {
+  HouseBloc _houseBloc;
+  final _picker = ImagePicker();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _direccionController = TextEditingController();
+  final TextEditingController _localidadController = TextEditingController();
+  final TextEditingController _zipController = TextEditingController();
+  final TextEditingController _tipoController = TextEditingController();
+  final TextEditingController _habitantesController = TextEditingController();
+  final TextEditingController _costoController = TextEditingController();
+
+  _displayPhotoDialog(BuildContext context) async {
+    return await showDialog<Product>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: const Text('Reemplazar imagen desde: '),
+          children: <Widget>[
+            SimpleDialogOption(
+              onPressed: () async {
+                final pickedImage =
+                    await _picker.getImage(source: ImageSource.gallery);
+                final image = File(pickedImage.path);
+              },
+              child: const Text('Galeria'),
+            ),
+            SimpleDialogOption(
+              onPressed: () async {
+                final pickedImage =
+                    await _picker.getImage(source: ImageSource.camera);
+                final image = File(pickedImage.path);
+              },
+              child: const Text('Cámara'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _houseView(BuildContext context, double width, String photoPath) {
+    return Container(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                _displayPhotoDialog(context);
+              },
+              child: ClipRRect(
+                child: Image(
+                  fit: BoxFit.fill,
+                  image: NetworkImage(
+                    photoPath,
+                  ),
+                  width: width,
+                  height: 150,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _descriptionController,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: width - 20,
+                          child: Text(
+                            "Dirección",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: width - 20,
+                          child: TextField(
+                            controller: _direccionController,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: width - 20,
+                          child: Text(
+                            "Localidad",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: width - 20,
+                          child: TextField(
+                            controller: _localidadController,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: (width - 20) * 0.33,
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "C.P",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              TextField(
+                                controller: _zipController,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: (width - 20) * 0.66,
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Tipo",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              TextField(
+                                controller: _tipoController,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: (width - 20) * 0.33,
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Habitantes",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              TextField(
+                                controller: _habitantesController,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: (width - 20) * 0.66,
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Costo",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              TextField(
+                                controller: _costoController,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _houseBloc.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(''),
+      appBar: AppBar(
+        title: Text("Edición"),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {},
+              child: Icon(
+                Icons.save,
+                size: 26.0,
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: BlocProvider(
+        create: (BuildContext context) {
+          _houseBloc = HouseBloc()..add(HouseFetchEvent(hid: 10));
+          return _houseBloc;
+        },
+        child: BlocConsumer<HouseBloc, HouseState>(
+          listener: (context, state) {
+            if (state is HouseErrorState) {
+              Scaffold.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(content: Text("Error: ${state.error}")),
+                );
+            }
+          },
+          builder: (context, state) {
+            if (state is HouseFetchedState) {
+              _costoController.text = state.house.cost.toString();
+              _descriptionController.text = state.house.description;
+              _direccionController.text = state.house.addressLine;
+              _habitantesController.text =
+                  state.house.roommatesLimit.toString();
+              _localidadController.text = state.house.city;
+              _zipController.text = state.house.zipCode;
+              _tipoController.text = state.house.type;
+              return _houseView(context, width, state.house.foto);
+            }
+            if (state is HouseCreateState) {
+              return _houseView(context, width,
+                  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg1.cgtrader.com%2Fitems%2F826675%2F229135006e%2Fempty-room-3d-model-blend.jpg&f=1&nofb=1");
+            }
+            return Container(
+                // child: Center(
+                //   child: CircularProgressIndicator(),
+                // ),
+                );
+          },
         ),
-        body: Container());
+      ),
+    );
   }
 }
