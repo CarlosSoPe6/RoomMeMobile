@@ -5,8 +5,12 @@ abstract class UserState {}
 
 class UserInitial extends UserState {}
 
-class UserFetchedState extends UserState {}
+class UserFetchedState extends UserState {
+  final User user;
+  UserFetchedState({this.user});
+}
 
 class UserErrorState extends UserState {
-  String error;
+  final String error;
+  UserErrorState({this.error});
 }

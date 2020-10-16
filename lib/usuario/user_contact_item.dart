@@ -11,26 +11,28 @@ class UserContactItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: Container(
-        padding: EdgeInsets.all(5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 5, right: 5),
-              child: Text(
-                this.name,
-                textAlign: TextAlign.left,
+      child: Card(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 5, right: 5),
+                child: Text(
+                  this.name,
+                  textAlign: TextAlign.left,
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 5, right: 5),
-              child: Text(
-                this.phone,
-                textAlign: TextAlign.left,
-              ),
-            )
-          ],
+              Padding(
+                padding: EdgeInsets.only(left: 5, right: 5),
+                child: Text(
+                  this.phone,
+                  textAlign: TextAlign.left,
+                ),
+              )
+            ],
+          ),
         ),
       ),
       onLongPress: () => {},

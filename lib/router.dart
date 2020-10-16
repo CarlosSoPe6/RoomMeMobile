@@ -1,6 +1,7 @@
+import 'package:RoomMeMobile/chat/chat.dart';
 import 'package:RoomMeMobile/house/create_house.dart';
 import 'package:RoomMeMobile/house/details_house.dart';
-import 'package:RoomMeMobile/login.dart';
+import 'package:RoomMeMobile/login/login_page.dart';
 import 'package:RoomMeMobile/register.dart';
 import 'package:RoomMeMobile/usuario/user.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ Route<dynamic> buildRouter(RouteSettings settings) {
     case '/login':
       return MaterialPageRoute<void>(
         settings: settings,
-        builder: (BuildContext context) => Login(),
+        builder: (BuildContext context) => LoginPage(),
         fullscreenDialog: true,
       );
     case '/register':
@@ -43,6 +44,12 @@ Route<dynamic> buildRouter(RouteSettings settings) {
       return MaterialPageRoute<void>(
         settings: settings,
         builder: (BuildContext context) => CreateHouse(),
+        fullscreenDialog: true,
+      );
+    case '/chat':
+      return MaterialPageRoute<void>(
+        settings: settings,
+        builder: (BuildContext context) => Chat(),
         fullscreenDialog: true,
       );
     default:
