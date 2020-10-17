@@ -9,6 +9,8 @@ enum Product { Galeria, Camara }
 
 class UserPage extends StatefulWidget {
   @override
+  File f = File(
+      'https://res.cloudinary.com/dgahmwjbv/image/upload/v1602784593/WhatsApp_Image_2020-10-15_at_12.29.43_PM_e8unq1.jpg');
   _UserPageState createState() => _UserPageState();
 }
 
@@ -18,9 +20,9 @@ class _UserPageState extends State<UserPage> {
   final TextEditingController _userLastnameController = TextEditingController();
   final TextEditingController _userEmailController = TextEditingController();
   final TextEditingController _userPhoneController = TextEditingController();
-  String _photoPath = "";
   String _name = "";
   UserBloc _userBloc;
+  File _profileImage;
 
   _displayPhotoDialog(BuildContext context) async {
     return await showDialog<Product>(
@@ -106,8 +108,8 @@ class _UserPageState extends State<UserPage> {
                               child: Image(
                                 height: 100,
                                 width: 100,
-                                image: NetworkImage(
-                                  _photoPath,
+                                image: FileImage(
+                                  _profileImage,
                                 ),
                               ),
                               borderRadius: BorderRadius.circular(50),
@@ -225,11 +227,10 @@ class _UserPageState extends State<UserPage> {
         title: Text(''),
         actions: [
           IconButton(
-            icon: Icon(Icons.chat_bubble, color: Colors.white), 
-            onPressed: (){
-              Navigator.of(context).pushNamed('/chat');
-            }
-          )
+              icon: Icon(Icons.chat_bubble, color: Colors.white),
+              onPressed: () {
+                Navigator.of(context).pushNamed('/chat');
+              })
         ],
       ),
       body: BlocProvider(
@@ -248,10 +249,10 @@ class _UserPageState extends State<UserPage> {
           if (state is UserFetchedState) {
             _userEmailController.text = state.user.email;
             _userPhoneController.text = state.user.phone;
-            _photoPath = state.user.photo;
             _name = state.user.name + " " + state.user.lastName;
             _userNameController.text = state.user.name;
             _userLastnameController.text = state.user.lastName;
+            _profileImage = state.profileImage;
           }
         }, builder: (context, state) {
           if (state is UserFetchedState) {

@@ -27,11 +27,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         print(response.body);
         var json = convert.jsonDecode(response.body);
         User user = User.fromJson(json);
-        yield UserFetchedState(user: user);
+        File profileImage = File(user.photo);
+        yield UserFetchedState(user: user, profileImage: profileImage);
       } catch (e) {
         print(e);
         yield UserErrorState(error: e.toString());
       }
+    }
+    if (event is UserImageUpdateEvent) {
+      yield UserImageUpdatedState(profileImage: event.profileImage);
     } else {
       yield UserErrorState(error: "Error");
     }
