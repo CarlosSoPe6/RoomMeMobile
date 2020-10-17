@@ -31,7 +31,11 @@ class _HouseItemState extends State<HouseItem> {
       semanticContainer: true,
       margin: EdgeInsets.only(bottom: width/10),
       clipBehavior: Clip.antiAliasWithSaveLayer,
-      child: Column(
+      child: GestureDetector(
+        onTap: (){
+          Navigator.of(context).pushNamed('/house/detail');
+        },
+        child: Column(
         children:[
           Image.network(
             widget.url,
@@ -58,6 +62,7 @@ class _HouseItemState extends State<HouseItem> {
             )
           )
         ]
+      )
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0)
