@@ -33,6 +33,11 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Mis casas'),
+        actions: [
+          IconButton(icon: Icon(Icons.people), onPressed: (){
+            Navigator.of(context).pushNamed('/user');
+          })
+        ],
       ),
       body: BlocProvider(
         create: (context) => HomeBloc()..add(InitialEvent(houses: 24)),
