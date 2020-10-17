@@ -23,7 +23,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       try {
         int uid = event.uid;
         String uri = "$_url$uid";
-        print(uri.toString());
         var response = await http.get(uri.toString());
         print(response.body);
         var json = convert.jsonDecode(response.body);

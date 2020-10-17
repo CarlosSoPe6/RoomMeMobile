@@ -46,6 +46,11 @@ Route<dynamic> buildRouter(RouteSettings settings) {
         builder: (BuildContext context) => CreateHouse(),
         fullscreenDialog: true,
       );
+    case '/house/edit':
+      return MaterialPageRoute<void>(
+        settings: settings,
+        builder: (BuildContext context) => CreateHouse(),
+      );
     case '/chat':
       return MaterialPageRoute<void>(
         settings: settings,
