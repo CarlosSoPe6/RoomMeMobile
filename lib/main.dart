@@ -1,8 +1,6 @@
 import 'package:RoomMeMobile/router.dart';
 import 'package:flutter/material.dart';
 
-import 'login/login_page.dart';
- 
 
 void main() => runApp(MyApp());
 
@@ -16,7 +14,16 @@ class MyApp extends StatelessWidget {
           primaryTextTheme:
               TextTheme(headline6: TextStyle(color: Colors.white)),
           buttonTheme: ButtonThemeData(buttonColor: Color(0xFFFEDCD2))),
-      initialRoute: '/home',
+      initialRoute: '/login',
+      // routes: {
+      //   '/login': (context) => LoginPage(),
+      //   '/register': (context) => Register(),
+      //   '/home': (context) => Home(),
+      //   '/user': (context) => UserPage(),
+      //   '/house/detail': (context) => DetailsHouse(),
+      //   '/house/new': (context) => CreateHouse(),
+      //   '/chat': (context) => Chat()
+      // },
       onGenerateRoute: buildRouter,
     );
   }
