@@ -1,4 +1,3 @@
-import 'package:RoomMeMobile/chat/chat.dart';
 import 'package:RoomMeMobile/login/bloc/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -44,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
                 );
               _loginBloc.add(InitialEvent());
             }else if(state is LoginSuccessState){
-              Navigator.of(context).pushNamed('/user');
+              Navigator.of(context).pushReplacementNamed('/home', arguments: new List());
             }
           },
           builder: (context, state) {
@@ -113,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 30,),
                     GestureDetector(
                       onTap: (){
-                        Navigator.of(context).pushNamed('/register');
+                        Navigator.of(context).pushReplacementNamed('/register');
                       },
                       child: Text("Crear una cuenta", style: TextStyle(color: Colors.lightBlue, decoration: TextDecoration.underline),)
                     )

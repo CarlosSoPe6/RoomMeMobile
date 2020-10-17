@@ -36,6 +36,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   Future<int> _loginRequest(body) async {
     try {
+      print('back');
       Response response = await post(_link, headers:{"Content-type": "application/json"}, body: body);
         if(response.statusCode == 401) {
           return 0;
