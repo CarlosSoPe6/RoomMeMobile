@@ -27,18 +27,41 @@ class HttpClient {
   Future<Map<String, dynamic>> get(
       final String url, final Map<String, dynamic> params) async {
     print(headers);
-    net.Response response = await net.get(url, headers: headers);
+    final net.Response response = await net.get(
+      url,
+      headers: headers,
+    );
     return jsonDecode(response.body);
   }
 
   Future<Map<String, dynamic>> post(
-      final String url, final Map<String, dynamic> body) async {}
+      final String url, final Map<String, dynamic> body) async {
+    final net.Response response = await net.post(
+      url,
+      headers: headers,
+      body: jsonEncode(body),
+    );
+    return jsonDecode(response.body);
+  }
 
   Future<Map<String, dynamic>> put(
-      final String url, final Map<String, dynamic> body) async {}
+      final String url, final Map<String, dynamic> body) async {
+    final net.Response response = await net.put(
+      url,
+      headers: headers,
+      body: jsonEncode(body),
+    );
+    return jsonDecode(response.body);
+  }
 
   Future<Map<String, dynamic>> delete(
-      final String url, final Map<String, dynamic> params) async {}
+      final String url, final Map<String, dynamic> params) async {
+    final net.Response response = await net.delete(
+      url,
+      headers: headers,
+    );
+    return jsonDecode(response.body);
+  }
 
   Future<bool> login(String email, String password) async {
     try {
