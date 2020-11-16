@@ -2,11 +2,9 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as net;
 
-/**
- * Singleton para el cliente HTTP
- */
+/// Singleton para el cliente HTTP
 class HttpClient {
-  final String _base_path = "https://room-me-app.herokuapp.com/api";
+  final String basePath = "https://room-me-app.herokuapp.com/api";
   final String _login = "https://room-me-app.herokuapp.com/api/login";
   Map<String, String> headers = Map();
   Map<String, String> cookies = Map();
