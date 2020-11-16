@@ -24,10 +24,11 @@ class HttpClient {
     return HttpClient._client;
   }
 
-  dynamic get(final String url, final Map<String, dynamic> params) async {
+  Future<Map<String, dynamic>> get(
+      final String url, final Map<String, dynamic> params) async {
     print(headers);
     net.Response response = await net.get(url, headers: headers);
-    return response.body;
+    return jsonDecode(response.body);
   }
 
   Future<Map<String, dynamic>> post(
@@ -47,6 +48,7 @@ class HttpClient {
       if (response.statusCode == 401) {
         return false;
       }
+      print(response.headers);
       _updateCookie(response);
       return true;
     } catch (e) {
