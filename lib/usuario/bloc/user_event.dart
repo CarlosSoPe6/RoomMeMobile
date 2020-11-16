@@ -36,3 +36,8 @@ class UserDeleteContact extends UserEvent {
   final int index;
   UserDeleteContact({this.index});
 }
+
+class UserImageUpdateEvent extends UserEvent {
+  final File profileImage;
+  UserImageUpdateEvent({this.profileImage});
+}
