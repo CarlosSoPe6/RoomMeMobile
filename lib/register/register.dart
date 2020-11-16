@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'main_bloc.dart';
+import 'bloc/main_bloc.dart';
 
 
 class Register extends StatefulWidget {
@@ -59,19 +61,18 @@ class _RegisterState extends State<Register> {
                 ..showSnackBar(
                   SnackBar(content: Text("Error: ${state.error}")),
                 );
-            } else if(state is ShowUsersState) {
+            } else if(state is RegisteredState) {
               Scaffold.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(content: Text("Successful registration")),
                 );
-            } else if(state is RegisterEvent)
-              Navigator.of(context).pushReplacementNamed('/home');
+              sleep(Duration(seconds: 1));
+              Navigator.of(context).pushReplacementNamed('/home', arguments: new List());
+            }
           },
           builder: (context, state) {
             return ListView(
-              // physics: ScrollPhysics(),
-              // shrinkWrap: true,
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: width/8),
@@ -84,10 +85,6 @@ class _RegisterState extends State<Register> {
                           child: TextFormField(
                             controller: _nameController,
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(0)
-                              ),
-                              fillColor: Colors.white,
                               filled: true,
                               labelText: 'Nombre'
                             ),
@@ -104,10 +101,6 @@ class _RegisterState extends State<Register> {
                           child: TextFormField(
                             controller: _lastnameController,
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(0)
-                              ),
-                              fillColor: Colors.white,
                               filled: true,
                               labelText: 'Apellido'
                             ),
@@ -124,10 +117,6 @@ class _RegisterState extends State<Register> {
                           child: TextFormField(
                             controller: _emailController,
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(0)
-                              ),
-                              fillColor: Colors.white,
                               filled: true,
                               labelText: 'Correo electrónico'
                             ),
@@ -144,10 +133,6 @@ class _RegisterState extends State<Register> {
                           child: TextFormField(
                             controller: _passwordController,
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(0)
-                              ),
-                              fillColor: Colors.white,
                               filled: true,
                               labelText: 'Contraseña',
                               suffixIcon: IconButton(

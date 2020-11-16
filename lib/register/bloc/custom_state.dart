@@ -9,8 +9,6 @@ abstract class CustomState extends Equatable {
 
 class InitialState extends CustomState {}
 
-class LoadingState extends CustomState {}
-
 class RegisteredState extends CustomState {}
 
 class ErrorState extends CustomState {
@@ -19,12 +17,4 @@ class ErrorState extends CustomState {
   ErrorState({@required this.error});
   @override
   List<Object> get props => [error];
-}
-
-class ShowUsersState extends CustomState {
-  final List<User> usersList;
-
-  ShowUsersState({@required this.usersList});
-  @override
-  List<Object> get props => [usersList];
 }
