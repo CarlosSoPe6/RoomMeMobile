@@ -63,14 +63,21 @@ class _HomeState extends State<Home> {
           },
           builder: (context, state) {
             if (state is InitialState){
-              dynamic data = state.body;
-              return ListView.builder(
-                padding: EdgeInsets.all((width - cardWidth)/2),
-                itemCount: 10,
-                itemBuilder: (BuildContext context, int index) {
-                  return HouseItem(cardWidth: cardWidth, cardHeight: cardHeight, url: data['foto'], houseName: data['title']);
-                }
-              );
+              if(state.body.length > 0)
+                return RefreshIndicator(
+                  child: ListView.builder(
+                    padding: EdgeInsets.all((width - cardWidth)/2),
+                    itemCount: state.body.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return HouseItem(cardWidth: cardWidth, cardHeight: cardHeight, url: state.body[index]['foto'], houseName: state.body[index]['title']);
+                    }
+                  ),
+                  onRefresh: () async {
+                    BlocProvider.of<HomeBloc>(context).add(InitialEvent(houses: 24));
+                  }
+                );
+              else
+                return Center(child: Text('No houses available'));
             } else
               return Center(child: Text('No houses available'));
           }

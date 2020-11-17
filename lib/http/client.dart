@@ -27,12 +27,16 @@ class HttpClient {
   }
 
   dynamic get(final String url, final Map<String, dynamic> params) async {
-    print(headers);
+    // print(headers);
     final net.Response response = await net.get(
       url,
       headers: headers,
     );
-    return jsonDecode(response.body);
+    try {
+      return jsonDecode(response.body);
+    } catch(e) {
+      return [];
+    }
   }
 
   dynamic post(final String url, final Map<String, dynamic> body) async {
@@ -85,7 +89,7 @@ class HttpClient {
       if (response.statusCode == 401) {
         return false;
       }
-      print(response.headers);
+      // print(response.headers);
       _updateCookie(response);
       return true;
     } catch (e) {
@@ -100,19 +104,23 @@ class HttpClient {
       if (cookie.length > 0) cookie += ";";
       cookie += key + "=" + cookies[key];
     }
-
     return cookie;
   }
 
   void _setCookie(String rawCookie) {
     if (rawCookie.length > 0) {
-      var keyValue = rawCookie.split('=');
-      if (keyValue.length == 2) {
-        var key = keyValue[0].trim();
-        var value = keyValue[1];
-        if (key == 'path' || key == 'expires') return;
-        this.cookies[key] = value;
+      int idx = rawCookie.indexOf('=');
+      if (idx == -1) {
+        return;
       }
+      List keyValue = [
+        rawCookie.substring(0, idx).trim(),
+        rawCookie.substring(idx + 1).trim()
+      ];
+      var key = keyValue[0].trim();
+      var value = keyValue[1];
+      if (key == 'path' || key == 'expires') return;
+      this.cookies[key] = value;
     }
   }
 

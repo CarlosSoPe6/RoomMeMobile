@@ -8,7 +8,7 @@ abstract class HomeState extends Equatable {
 }
 
 class InitialState extends HomeState {
-  final dynamic body;
+  final List<Map<String, dynamic>> body;
 
   InitialState({@required this.body});
 }
