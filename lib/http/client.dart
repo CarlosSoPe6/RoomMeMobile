@@ -1,5 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:path/path.dart';
+import 'package:http_parser/http_parser.dart' as httpParser;
 import 'package:http/http.dart' as net;
 
 /// Singleton para el cliente HTTP
@@ -22,8 +26,7 @@ class HttpClient {
     return HttpClient._client;
   }
 
-  Future<Map<String, dynamic>> get(
-      final String url, final Map<String, dynamic> params) async {
+  dynamic get(final String url, final Map<String, dynamic> params) async {
     print(headers);
     final net.Response response = await net.get(
       url,
@@ -32,8 +35,7 @@ class HttpClient {
     return jsonDecode(response.body);
   }
 
-  Future<Map<String, dynamic>> post(
-      final String url, final Map<String, dynamic> body) async {
+  dynamic post(final String url, final Map<String, dynamic> body) async {
     final net.Response response = await net.post(
       url,
       headers: headers,
@@ -42,8 +44,23 @@ class HttpClient {
     return jsonDecode(response.body);
   }
 
-  Future<Map<String, dynamic>> put(
-      final String url, final Map<String, dynamic> body) async {
+  Future<bool> uploadImage(final String url, final File file) async {
+    final ext = basename(file.path).split('.').last;
+    final multipartFileSign = await net.MultipartFile.fromPath(
+      'image',
+      file.path,
+      filename: basename(file.path),
+      contentType: httpParser.MediaType('Image', ext),
+    );
+    final request = new net.MultipartRequest("POST", Uri.parse(url));
+    request.files.add(multipartFileSign);
+    request.headers['Cookie'] = headers['Cookie'];
+    final response = await request.send();
+    print(response.reasonPhrase);
+    return response.statusCode == 200;
+  }
+
+  dynamic put(final String url, final Map<String, dynamic> body) async {
     final net.Response response = await net.put(
       url,
       headers: headers,
@@ -52,8 +69,7 @@ class HttpClient {
     return jsonDecode(response.body);
   }
 
-  Future<Map<String, dynamic>> delete(
-      final String url, final Map<String, dynamic> params) async {
+  dynamic delete(final String url, final Map<String, dynamic> params) async {
     final net.Response response = await net.delete(
       url,
       headers: headers,
@@ -110,7 +126,7 @@ class HttpClient {
           _setCookie(cookie);
         }
       }
-      headers['cookie'] = _generateCookieHeader();
+      headers['Cookie'] = _generateCookieHeader();
     }
   }
 }

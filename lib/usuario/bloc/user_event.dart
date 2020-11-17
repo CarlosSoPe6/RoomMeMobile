@@ -8,10 +8,6 @@ class UserFetchEvent extends UserEvent {
   UserFetchEvent({this.uid});
 }
 
-class UserUpdateImage extends UserEvent {
-  final File image;
-  UserUpdateImage({this.image});
-}
 
 class UserUpdateName extends UserEvent {
   final String name;

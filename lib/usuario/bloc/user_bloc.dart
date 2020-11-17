@@ -11,6 +11,8 @@ part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final String _url = "https://room-me-app.herokuapp.com/user/";
+  final String _uploadUrl =
+      "https://room-me-app.herokuapp.com/image/upload/user";
   HttpClient client;
 
   UserBloc() : super(UserInitial()) {
@@ -34,7 +36,18 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         yield UserErrorState(error: e.toString());
       }
     } else if (event is UserImageUpdateEvent) {
-      yield UserImageUpdatedState(profileImage: event.profileImage);
+      try {
+        final profileImage = event.profileImage;
+        final success = await client.uploadImage(_uploadUrl, profileImage);
+        if (success) {
+          yield UserImageUpdatedState(profileImage: profileImage);
+        } else {
+          yield UserErrorState(error: "Failed to load image");
+        }
+      } catch (e) {
+        print(e);
+        yield UserErrorState(error: "Failed to load image");
+      }
     } else {
       yield UserErrorState(error: "No event map");
     }
