@@ -7,7 +7,7 @@ abstract class ChatState extends Equatable {
   List<Object> get props => [];
 }
 
-class ChatInitial extends ChatState {
+class ChatIdle extends ChatState {
   @override
   List<Object> get props => [];
 }
@@ -17,7 +17,7 @@ class ImagePickedState extends ChatState {
   List<Object> get props => [];
 }
 
-class MessagesLoadedState extends ChatState {
+class MessagesLoadingState extends ChatState {
   
   @override
   List<Object> get props => [];

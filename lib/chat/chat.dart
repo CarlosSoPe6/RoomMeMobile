@@ -52,6 +52,9 @@ class _ChatState extends State<Chat> {
             
           },
           builder: (context, state) {
+            if(state is MessagesLoadingState){
+              print("Cargado");            
+            }
             return Container(
                   child: DashChat(
                     showAvatarForEveryMessage: true,
