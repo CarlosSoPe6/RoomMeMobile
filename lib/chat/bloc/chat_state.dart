@@ -16,3 +16,9 @@ class ImagePickedState extends ChatState {
   @override
   List<Object> get props => [];
 }
+
+class MessagesLoadedState extends ChatState {
+  
+  @override
+  List<Object> get props => [];
+}

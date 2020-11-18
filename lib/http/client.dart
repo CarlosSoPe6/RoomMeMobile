@@ -24,10 +24,11 @@ class HttpClient {
     return HttpClient._client;
   }
 
-  Future<Map<String, dynamic>> get(
+  Future<dynamic> get(
       final String url, final Map<String, dynamic> params) async {
     print(headers);
     net.Response response = await net.get(url, headers: headers);
+    
     return jsonDecode(response.body);
   }
 
