@@ -37,7 +37,8 @@ class _UserPageState extends State<UserPage> {
                 final pickedImage =
                     await _picker.getImage(source: ImageSource.gallery);
                 final image = File(pickedImage.path);
-                _userBloc.add(UserUpdateImage(image: image));
+                _userBloc.add(UserImageUpdateEvent(profileImage: image));
+                Navigator.of(context).pop();
               },
               child: const Text('Galeria'),
             ),
@@ -46,7 +47,8 @@ class _UserPageState extends State<UserPage> {
                 final pickedImage =
                     await _picker.getImage(source: ImageSource.camera);
                 final image = File(pickedImage.path);
-                _userBloc.add(UserUpdateImage(image: image));
+                _userBloc.add(UserImageUpdateEvent(profileImage: image));
+                Navigator.of(context).pop();
               },
               child: const Text('Cámara'),
             ),

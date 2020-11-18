@@ -1,12 +1,14 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:path/path.dart';
+import 'package:http_parser/http_parser.dart' as httpParser;
 import 'package:http/http.dart' as net;
 
-/**
- * Singleton para el cliente HTTP
- */
+/// Singleton para el cliente HTTP
 class HttpClient {
-  final String _base_path = "https://room-me-app.herokuapp.com/api";
+  final String basePath = "https://room-me-app.herokuapp.com/api";
   final String _login = "https://room-me-app.herokuapp.com/api/login";
   Map<String, String> headers = Map();
   Map<String, String> cookies = Map();
@@ -24,22 +26,60 @@ class HttpClient {
     return HttpClient._client;
   }
 
-  Future<dynamic> get(
-      final String url, final Map<String, dynamic> params) async {
-    print(headers);
-    net.Response response = await net.get(url, headers: headers);
-    
+  dynamic get(final String url, final Map<String, dynamic> params) async {
+    // print(headers);
+    final net.Response response = await net.get(
+      url,
+      headers: headers,
+    );
+    try {
+      return jsonDecode(response.body);
+    } catch(e) {
+      return [];
+    }
+  }
+
+  dynamic post(final String url, final Map<String, dynamic> body) async {
+    final net.Response response = await net.post(
+      url,
+      headers: headers,
+      body: jsonEncode(body),
+    );
     return jsonDecode(response.body);
   }
 
-  Future<Map<String, dynamic>> post(
-      final String url, final Map<String, dynamic> body) async {}
+  Future<bool> uploadImage(final String url, final File file) async {
+    final ext = basename(file.path).split('.').last;
+    final multipartFileSign = await net.MultipartFile.fromPath(
+      'image',
+      file.path,
+      filename: basename(file.path),
+      contentType: httpParser.MediaType('Image', ext),
+    );
+    final request = new net.MultipartRequest("POST", Uri.parse(url));
+    request.files.add(multipartFileSign);
+    request.headers['Cookie'] = headers['Cookie'];
+    final response = await request.send();
+    print(response.reasonPhrase);
+    return response.statusCode == 200;
+  }
 
-  Future<Map<String, dynamic>> put(
-      final String url, final Map<String, dynamic> body) async {}
+  dynamic put(final String url, final Map<String, dynamic> body) async {
+    final net.Response response = await net.put(
+      url,
+      headers: headers,
+      body: jsonEncode(body),
+    );
+    return jsonDecode(response.body);
+  }
 
-  Future<Map<String, dynamic>> delete(
-      final String url, final Map<String, dynamic> params) async {}
+  dynamic delete(final String url, final Map<String, dynamic> params) async {
+    final net.Response response = await net.delete(
+      url,
+      headers: headers,
+    );
+    return jsonDecode(response.body);
+  }
 
   Future<bool> login(String email, String password) async {
     try {
@@ -49,7 +89,7 @@ class HttpClient {
       if (response.statusCode == 401) {
         return false;
       }
-      print(response.headers);
+      // print(response.headers);
       _updateCookie(response);
       return true;
     } catch (e) {
@@ -64,19 +104,23 @@ class HttpClient {
       if (cookie.length > 0) cookie += ";";
       cookie += key + "=" + cookies[key];
     }
-
     return cookie;
   }
 
   void _setCookie(String rawCookie) {
     if (rawCookie.length > 0) {
-      var keyValue = rawCookie.split('=');
-      if (keyValue.length == 2) {
-        var key = keyValue[0].trim();
-        var value = keyValue[1];
-        if (key == 'path' || key == 'expires') return;
-        this.cookies[key] = value;
+      int idx = rawCookie.indexOf('=');
+      if (idx == -1) {
+        return;
       }
+      List keyValue = [
+        rawCookie.substring(0, idx).trim(),
+        rawCookie.substring(idx + 1).trim()
+      ];
+      var key = keyValue[0].trim();
+      var value = keyValue[1];
+      if (key == 'path' || key == 'expires') return;
+      this.cookies[key] = value;
     }
   }
 
@@ -90,7 +134,7 @@ class HttpClient {
           _setCookie(cookie);
         }
       }
-      headers['cookie'] = _generateCookieHeader();
+      headers['Cookie'] = _generateCookieHeader();
     }
   }
 }
