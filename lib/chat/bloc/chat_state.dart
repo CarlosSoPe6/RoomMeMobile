@@ -7,6 +7,18 @@ abstract class ChatState extends Equatable {
   List<Object> get props => [];
 }
 
+
+
+class ChatInit extends ChatState {
+  @override
+  List<Object> get props => [];
+}
+
+class ChatFetched extends ChatState {
+  @override
+  List<Object> get props => [];
+}
+
 class ChatIdle extends ChatState {
   @override
   List<Object> get props => [];

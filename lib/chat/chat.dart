@@ -17,6 +17,7 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   final _picker = ImagePicker();
+  ScrollController _scrollController = ScrollController();
   String _image;
   ChatBloc _chatBloc;
   Socket _socketIO;
@@ -44,21 +45,31 @@ class _ChatState extends State<Chat> {
       body: BlocProvider(
         create: (context) {
           _chatBloc = ChatBloc();
-          return _chatBloc..add(GetMessagesEvent());
+          _chatBloc..add(GetMessagesEvent());
+          return _chatBloc;
         },
         child: BlocConsumer<ChatBloc, ChatState>(
           listener: (context, state) {
             
-            
           },
           builder: (context, state) {
-            if(state is MessagesLoadingState){
-              print("Cargado");            
-            }
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              if(state is ChatFetched){
+                _scrollController.jumpTo(
+                  _scrollController.position.maxScrollExtent + 25.0,
+                );       
+              }
+            });
             return Container(
                   child: DashChat(
                     showAvatarForEveryMessage: true,
-                    messages: _chatBloc.getChatMessages, 
+                    messages: _chatBloc.getChatMessages,
+                    scrollController: _scrollController, 
+                    onScrollToBottomPress: () {
+                       _scrollController.jumpTo(
+                        _scrollController.position.maxScrollExtent + 25.0,
+                      ); 
+                    },
                     user: ChatUser(
                       name: "Jhon Doe",
                       uid: "10000",
@@ -120,7 +131,6 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  
 
   Widget _createText(String mssg, [ChatMessage]){
     return Text(mssg, style: TextStyle(color: Colors.black));

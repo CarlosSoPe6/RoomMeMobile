@@ -13,7 +13,7 @@ part 'chat_state.dart';
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final String _link = 'https://room-me-app.herokuapp.com/api/chat/27';
   List<ChatMessage> _listMessages = [];
-  ChatBloc() : super(ChatIdle());
+  ChatBloc() : super(ChatInit());
   List <ChatMessage> get getChatMessages => _listMessages;
 
   @override
@@ -24,7 +24,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       print("Chat iniciado");
       yield MessagesLoadingState();
       await _getMessages();
-      yield ChatIdle();
+      yield ChatFetched();
     }
     else if(event is ImagePickedEvent){
       yield ImagePickedState();
