@@ -50,17 +50,24 @@ class _HouseItemState extends State<HouseItem> {
                         Padding(
                             padding: EdgeInsets.only(left: 10),
                             child: Container(
-                                width: widget.cardWidth - 106,
+                                width: widget.cardWidth - 160,
                                 child: Text(widget.houseName,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.w500)))),
                         Row(children: [
                           IconButton(
                               icon: Icon(Icons.content_paste),
                               onPressed: () {}),
-                          IconButton(icon: Icon(Icons.people), onPressed: () {})
+                          IconButton(
+                              icon: Icon(Icons.people), onPressed: () {}),
+                          IconButton(
+                              icon:
+                                  Icon(Icons.chat_bubble, color: Colors.black),
+                              onPressed: () {
+                                Navigator.of(context).pushNamed('/chat');
+                              })
                         ])
                       ]))
             ])),

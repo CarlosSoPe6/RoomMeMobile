@@ -5,8 +5,10 @@ import 'package:dash_chat/dash_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 class Chat extends StatefulWidget {
+  
   Chat({Key key}) : super(key: key);
 
   @override
@@ -15,22 +17,23 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   final _picker = ImagePicker();
+  ScrollController _scrollController = ScrollController();
   String _image;
   ChatBloc _chatBloc;
-  
-  List<ChatMessage> _listMessages = [
-    ChatMessage(
-        text: "Hello",
-        user:  ChatUser(
-          name: "Fayeed",
-          uid: "123456789",
-          avatar: "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
-        ),
-        createdAt: DateTime.now(),
-    )
-  ];
+  Socket _socketIO;
+  List<ChatMessage> _listMessages = [];
 
-  
+  @override
+  void initState() {
+    _connectSocket();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _chatBloc.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,19 +45,34 @@ class _ChatState extends State<Chat> {
       body: BlocProvider(
         create: (context) {
           _chatBloc = ChatBloc();
-          return _chatBloc..add(ChatInitialEvent());
+          _chatBloc..add(GetMessagesEvent());
+          return _chatBloc;
         },
         child: BlocConsumer<ChatBloc, ChatState>(
           listener: (context, state) {
             
           },
           builder: (context, state) {
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              if(state is ChatFetched){
+                _scrollController.jumpTo(
+                  _scrollController.position.maxScrollExtent + 25.0,
+                );       
+              }
+            });
             return Container(
                   child: DashChat(
-                    messages: _listMessages, 
+                    showAvatarForEveryMessage: true,
+                    messages: _chatBloc.getChatMessages,
+                    scrollController: _scrollController, 
+                    onScrollToBottomPress: () {
+                       _scrollController.jumpTo(
+                        _scrollController.position.maxScrollExtent + 25.0,
+                      ); 
+                    },
                     user: ChatUser(
                       name: "Jhon Doe",
-                      uid: "xxxxxxxxx",
+                      uid: "10000",
                       avatar: "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
                     ),
                     dateFormat: DateFormat('dd MMMM yyyy - EEEE'), 
@@ -100,10 +118,8 @@ class _ChatState extends State<Chat> {
                     chatFooterBuilder: state is ImagePickedState ? _footerImage : null,
                     onSend: (message) {
                       if(_image != null) message.image = _image;
+                      _emitSocketMessage(message);
                       
-                      setState(() {
-                        _listMessages.add(message);
-                      });
                       _image = null;
                       _chatBloc.add(MessageSendEvent());
                     }
@@ -115,7 +131,6 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  
 
   Widget _createText(String mssg, [ChatMessage]){
     return Text(mssg, style: TextStyle(color: Colors.black));
@@ -151,7 +166,7 @@ class _ChatState extends State<Chat> {
                   icon: Icon(Icons.delete), 
                   onPressed: (){
                     _image = null;
-                    _chatBloc.add(ChatInitialEvent()); //TODO: Modify later
+                    _chatBloc.add(DeleteImageEvent()); //TODO: Modify later
                   }
                 )
             )
@@ -160,5 +175,37 @@ class _ChatState extends State<Chat> {
         ),
       );
     
+  }
+
+  _connectSocket(){
+    _socketIO = io('https://room-me-app.herokuapp.com', <String, dynamic>{
+      'transports':['websocket'],
+      'autoConnect':false
+    });
+    _socketIO.connect();
+    _socketIO.emit('entrar','27');
+
+    _socketIO.on('chatear', (receivedChat) {
+      _chatBloc.add(MessageReceivedEvent(chatMessage:
+        ChatMessage(
+          text: receivedChat['message'],
+          createdAt: DateTime.parse(receivedChat['time']).toLocal(),
+          user: ChatUser(
+            name: receivedChat['authorName'].toString(),
+            uid: receivedChat['authorId'].toString(),
+            avatar: "https://room-me-app.herokuapp.com/user/${receivedChat['authorId']}/image"
+          )
+        )
+      ));     
+    });
+  }
+
+  _emitSocketMessage(ChatMessage chatMessage) {
+    _socketIO.emit('chatear', {
+      'user': chatMessage.user.uid,
+      'house': 27,
+      'msg': chatMessage.text,
+      'time': chatMessage.createdAt.toIso8601String()
+    });
   }
 }

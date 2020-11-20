@@ -239,6 +239,13 @@ class _DetailsHouseState extends State<DetailsHouse> {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.chat_bubble, color: Colors.white),
+              onPressed: () {
+                Navigator.of(context).pushNamed('/chat');
+              })
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
