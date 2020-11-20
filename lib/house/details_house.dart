@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DetailsHouse extends StatefulWidget {
+  final int hid;
+  DetailsHouse({@required this.hid});
   @override
   _DetailsHouseState createState() => _DetailsHouseState();
 }
 
 class _DetailsHouseState extends State<DetailsHouse> {
   HouseBloc _houseBloc;
+  House _house;
   String title = "";
 
   Widget _houseView(BuildContext context, double width, House state) {
@@ -239,7 +242,7 @@ class _DetailsHouseState extends State<DetailsHouse> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pushNamed('/house/edit', arguments: 10);
+          Navigator.of(context).pushNamed('/house/edit', arguments: _house);
         },
         child: Icon(
           Icons.settings,
@@ -247,7 +250,8 @@ class _DetailsHouseState extends State<DetailsHouse> {
       ),
       body: BlocProvider(
         create: (BuildContext context) {
-          _houseBloc = HouseBloc()..add(HouseFetchEvent(hid: 10));
+          var hid = widget.hid;
+          _houseBloc = HouseBloc()..add(HouseFetchEvent(hid: hid));
           return _houseBloc;
         },
         child: BlocConsumer<HouseBloc, HouseState>(
@@ -262,6 +266,7 @@ class _DetailsHouseState extends State<DetailsHouse> {
           },
           builder: (context, state) {
             if (state is HouseFetchedState) {
+              _house = state.house;
               title = state.house.title;
               return _houseView(context, width, state.house);
             }
