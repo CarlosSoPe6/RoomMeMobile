@@ -1,8 +1,6 @@
 import 'package:RoomMeMobile/homepage/house_item.dart';
 import 'package:flutter/material.dart';
 
-import 'dart:convert';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/home_bloc.dart';
 
@@ -67,37 +65,19 @@ class _HomeState extends State<Home> {
                           padding: EdgeInsets.all((width - cardWidth) / 2),
                           itemCount: state.body.length,
                           itemBuilder: (BuildContext context, int index) {
-                            print(state.body[index]['hid']);
                             return HouseItem(
-                              cardWidth: cardWidth,
-                              cardHeight: cardHeight,
-                              url: state.body[index]['foto'],
-                              houseName: state.body[index]['title'],
-                              hid: state.body[index]['hid'],
-                            );
+                                cardWidth: cardWidth,
+                                cardHeight: cardHeight,
+                                house: state.body[index]);
                           }),
                       onRefresh: () async {
                         BlocProvider.of<HomeBloc>(context)
                             .add(InitialEvent(houses: 24));
                       });
                 else
-                  return Center(
-                    child: Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text('No houses available'),
-                          FlatButton(
-                            onPressed: onCreateAction,
-                            child: Text('Crear una'),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
+                  return Center(child: Text('Sin casas disponibles'));
               } else
-                return Center(child: Text('No houses available'));
+                return Center(child: Text('Sin casas disponibles'));
             })));
   }
 }
