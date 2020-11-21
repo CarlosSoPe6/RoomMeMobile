@@ -7,7 +7,7 @@ class UserInitial extends UserState {}
 
 class UserFetchedState extends UserState {
   final User user;
-  final File profileImage;
+  final String profileImage;
   UserFetchedState({this.user, this.profileImage});
 }
 

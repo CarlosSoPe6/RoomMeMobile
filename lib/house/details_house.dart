@@ -1,5 +1,6 @@
 import 'package:RoomMeMobile/house/bloc/house_bloc.dart';
 import 'package:RoomMeMobile/models/house.dart';
+import 'package:RoomMeMobile/utils/LocalNetImageProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,7 +24,7 @@ class _DetailsHouseState extends State<DetailsHouse> {
             ClipRRect(
               child: Image(
                 fit: BoxFit.fill,
-                image: NetworkImage(
+                image: LocalNetImageProvider(
                   state.foto,
                 ),
                 width: width,

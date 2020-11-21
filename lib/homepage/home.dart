@@ -14,8 +14,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  void onCreateAction() {
-    Navigator.of(context).pushNamed('/house/new');
+  Future<void> onCreateHouse(BuildContext context) async {
+    await Navigator.of(context).pushNamed('/house/new');
   }
 
   @override
@@ -29,6 +29,8 @@ class _HomeState extends State<Home> {
         appBar: AppBar(
           title: Text('Mis casas'),
           actions: [
+            IconButton(
+                icon: Icon(Icons.add), onPressed: () => onCreateHouse(context)),
             IconButton(
                 icon: Icon(Icons.people),
                 onPressed: () {
@@ -87,12 +89,7 @@ class _HomeState extends State<Home> {
                         Center(
                           child: Text('Sin casas disponibles'),
                         ),
-                        RaisedButton(onPressed: () async {
-                          await Navigator.of(context).pushNamed('/house/new');
-                          var bloc = BlocProvider.of<HomeBloc>(context);
-                          bloc.add(
-                              InitialEvent(houses: bloc.client.getUserId()));
-                        })
+                        RaisedButton(onPressed: () => onCreateHouse(context))
                       ],
                     ),
                   );

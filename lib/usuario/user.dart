@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:RoomMeMobile/usuario/bloc/user_bloc.dart';
 import 'package:RoomMeMobile/usuario/user_contact_item.dart';
+import 'package:RoomMeMobile/utils/LocalNetImageProvider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,7 +23,7 @@ class _UserPageState extends State<UserPage> {
   final TextEditingController _userPhoneController = TextEditingController();
   String _name = "";
   UserBloc _userBloc;
-  File _profileImage;
+  String _profileImage;
 
   _displayPhotoDialog(BuildContext context) async {
     return await showDialog<Product>(
@@ -110,7 +111,7 @@ class _UserPageState extends State<UserPage> {
                               child: Image(
                                 height: 100,
                                 width: 100,
-                                image: FileImage(
+                                image: LocalNetImageProvider(
                                   _profileImage,
                                 ),
                               ),
@@ -230,7 +231,8 @@ class _UserPageState extends State<UserPage> {
       ),
       body: BlocProvider(
         create: (context) {
-          _userBloc = UserBloc()..add(UserFetchEvent(uid: 24));
+          _userBloc = UserBloc();
+          _userBloc.add(UserFetchEvent(uid: _userBloc.client.getUserId()));
           return _userBloc;
         },
         child: BlocConsumer<UserBloc, UserState>(listener: (context, state) {

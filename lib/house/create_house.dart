@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:RoomMeMobile/house/bloc/house_bloc.dart';
 import 'package:RoomMeMobile/models/house.dart';
+import 'package:RoomMeMobile/utils/LocalNetImageProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +30,13 @@ class _CreateHouseState extends State<CreateHouse> {
   final TextEditingController _habitantesController = TextEditingController();
   final TextEditingController _costoController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    imageURL =
+        "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg1.cgtrader.com%2Fitems%2F826675%2F229135006e%2Fempty-room-3d-model-blend.jpg&f=1&nofb=1";
+  }
+
   _displayPhotoDialog(BuildContext context) async {
     return await showDialog<Product>(
       context: context,
@@ -45,7 +53,7 @@ class _CreateHouseState extends State<CreateHouse> {
                 setState(() {
                   imageURL = image.path;
                 });
-                // _houseBloc.add(HouseUpdateFotoEvent(file: image));
+                _houseBloc.add(HouseUpdateFotoEvent(file: image));
                 Navigator.of(context).pop();
               },
               child: const Text('Galeria'),
@@ -58,7 +66,7 @@ class _CreateHouseState extends State<CreateHouse> {
                 setState(() {
                   imageURL = image.path;
                 });
-                // _houseBloc.add(HouseUpdateFotoEvent(file: image));
+                _houseBloc.add(HouseUpdateFotoEvent(file: image));
                 Navigator.of(context).pop();
               },
               child: const Text('Cámara'),
@@ -81,9 +89,7 @@ class _CreateHouseState extends State<CreateHouse> {
               child: ClipRRect(
                 child: Image(
                   fit: BoxFit.fill,
-                  image: NetworkImage(
-                    imageURL,
-                  ),
+                  image: LocalNetImageProvider(imageURL),
                   width: width,
                   height: 150,
                 ),
@@ -346,11 +352,19 @@ class _CreateHouseState extends State<CreateHouse> {
                 ..showSnackBar(
                   SnackBar(content: Text("Error: ${state.error}")),
                 );
+            } else if (state is HouseFetchedState) {
+              setState(() {
+                imageURL = state.house.foto;
+              });
+            } else if (state is HouseCreateEvent) {
+              setState(() {
+                imageURL =
+                    "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg1.cgtrader.com%2Fitems%2F826675%2F229135006e%2Fempty-room-3d-model-blend.jpg&f=1&nofb=1";
+              });
             }
           },
           builder: (context, state) {
             if (state is HouseFetchedState) {
-              imageURL = state.house.foto;
               _titleController.text = state.house.title;
               _costoController.text = state.house.cost.toString();
               _descriptionController.text = state.house.description;
@@ -363,8 +377,6 @@ class _CreateHouseState extends State<CreateHouse> {
               return _houseView(context, width);
             }
             if (state is HouseCreateState) {
-              imageURL =
-                  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg1.cgtrader.com%2Fitems%2F826675%2F229135006e%2Fempty-room-3d-model-blend.jpg&f=1&nofb=1";
               return _houseView(context, width);
             }
             return Container(

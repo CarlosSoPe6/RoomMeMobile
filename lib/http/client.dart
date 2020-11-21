@@ -48,7 +48,7 @@ class HttpClient {
       headers: headers,
       body: jsonEncode(body),
     );
-    response.body;
+    return response.body;
   }
 
   Future<bool> uploadImage(final String url, final File file) async {
@@ -73,7 +73,7 @@ class HttpClient {
       headers: headers,
       body: jsonEncode(body),
     );
-    return jsonDecode(response.body);
+    return response.body;
   }
 
   dynamic delete(final String url, final Map<String, dynamic> params) async {
