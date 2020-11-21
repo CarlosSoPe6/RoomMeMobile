@@ -244,7 +244,7 @@ class _DetailsHouseState extends State<DetailsHouse> {
           IconButton(
               icon: Icon(Icons.chat_bubble, color: Colors.white),
               onPressed: () {
-                Navigator.of(context).pushNamed('/chat');
+                Navigator.of(context).pushNamed('/chat', arguments: _house.hid);
               })
         ],
       ),
