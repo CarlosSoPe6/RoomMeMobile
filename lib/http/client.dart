@@ -34,18 +34,19 @@ class HttpClient {
     );
     try {
       return jsonDecode(response.body);
-    } catch(e) {
+    } catch (e) {
       return [];
     }
   }
 
   dynamic post(final String url, final Map<String, dynamic> body) async {
+    print(jsonEncode(body));
     final net.Response response = await net.post(
       url,
       headers: headers,
       body: jsonEncode(body),
     );
-    return jsonDecode(response.body);
+    response.body;
   }
 
   Future<bool> uploadImage(final String url, final File file) async {

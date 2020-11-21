@@ -44,6 +44,20 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
         print(e);
         yield HouseErrorState(error: "Fallo en la carga de archivo");
       }
+    } else if (event is HouseCreateEvent) {
+      yield HouseCreateState();
+    } else if (event is HouseSaveEvent) {
+      var isNew = event.isNew;
+      var processHouse = event.house;
+      try {
+        if (isNew) {
+          var body = processHouse.toJson();
+          var response = await client.post(_url, body);
+          print(response);
+        } else {}
+      } catch (e) {
+        print(e);
+      }
     } else {
       yield HouseErrorState(error: "No event map");
     }

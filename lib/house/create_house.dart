@@ -17,6 +17,7 @@ class CreateHouse extends StatefulWidget {
 
 class _CreateHouseState extends State<CreateHouse> {
   HouseBloc _houseBloc;
+  File image;
   String imageURL;
   final _picker = ImagePicker();
   final TextEditingController _titleController = TextEditingController();
@@ -40,11 +41,11 @@ class _CreateHouseState extends State<CreateHouse> {
               onPressed: () async {
                 final pickedImage =
                     await _picker.getImage(source: ImageSource.gallery);
-                final image = File(pickedImage.path);
+                image = File(pickedImage.path);
                 setState(() {
                   imageURL = image.path;
                 });
-                _houseBloc.add(HouseUpdateFotoEvent(file: image));
+                // _houseBloc.add(HouseUpdateFotoEvent(file: image));
                 Navigator.of(context).pop();
               },
               child: const Text('Galeria'),
@@ -53,11 +54,11 @@ class _CreateHouseState extends State<CreateHouse> {
               onPressed: () async {
                 final pickedImage =
                     await _picker.getImage(source: ImageSource.camera);
-                final image = File(pickedImage.path);
+                image = File(pickedImage.path);
                 setState(() {
                   imageURL = image.path;
                 });
-                _houseBloc.add(HouseUpdateFotoEvent(file: image));
+                // _houseBloc.add(HouseUpdateFotoEvent(file: image));
                 Navigator.of(context).pop();
               },
               child: const Text('Cámara'),
@@ -92,6 +93,31 @@ class _CreateHouseState extends State<CreateHouse> {
               padding: EdgeInsets.all(5),
               child: Column(
                 children: [
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: width - 20,
+                          child: Text(
+                            "Tituo",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: width - 20,
+                          child: TextField(
+                            controller: _titleController,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   TextField(
                     controller: _descriptionController,
                   ),
@@ -324,9 +350,8 @@ class _CreateHouseState extends State<CreateHouse> {
           },
           builder: (context, state) {
             if (state is HouseFetchedState) {
-              setState(() {
-                imageURL = state.house.foto;
-              });
+              imageURL = state.house.foto;
+              _titleController.text = state.house.title;
               _costoController.text = state.house.cost.toString();
               _descriptionController.text = state.house.description;
               _direccionController.text = state.house.addressLine;
@@ -338,10 +363,8 @@ class _CreateHouseState extends State<CreateHouse> {
               return _houseView(context, width);
             }
             if (state is HouseCreateState) {
-              setState(() {
-                imageURL =
-                    "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg1.cgtrader.com%2Fitems%2F826675%2F229135006e%2Fempty-room-3d-model-blend.jpg&f=1&nofb=1";
-              });
+              imageURL =
+                  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg1.cgtrader.com%2Fitems%2F826675%2F229135006e%2Fempty-room-3d-model-blend.jpg&f=1&nofb=1";
               return _houseView(context, width);
             }
             return Container(

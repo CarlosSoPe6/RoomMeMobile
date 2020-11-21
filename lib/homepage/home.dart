@@ -16,6 +16,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  void onCreateAction() {
+    Navigator.of(context).pushNamed('/house/new');
+  }
+
   @override
   Widget build(BuildContext context) {
     print(widget.houses);
@@ -77,7 +81,21 @@ class _HomeState extends State<Home> {
                             .add(InitialEvent(houses: 24));
                       });
                 else
-                  return Center(child: Text('No houses available'));
+                  return Center(
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('No houses available'),
+                          FlatButton(
+                            onPressed: onCreateAction,
+                            child: Text('Crear una'),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
               } else
                 return Center(child: Text('No houses available'));
             })));
