@@ -114,7 +114,7 @@ class _HouseItemState extends State<HouseItem> {
                     IconButton(
                       icon: Icon(Icons.chat_bubble, color: Colors.black),
                       onPressed: () {
-                        Navigator.of(context).pushNamed('/chat');
+                        Navigator.of(context).pushNamed('/chat', arguments: widget.house['hid']);
                       }
                     )
                   ]

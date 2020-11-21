@@ -228,11 +228,7 @@ class _UserPageState extends State<UserPage> {
       appBar: AppBar(
         title: Text(''),
         actions: [
-          IconButton(
-              icon: Icon(Icons.chat_bubble, color: Colors.white),
-              onPressed: () {
-                Navigator.of(context).pushNamed('/chat');
-              })
+         
         ],
       ),
       body: BlocProvider(
