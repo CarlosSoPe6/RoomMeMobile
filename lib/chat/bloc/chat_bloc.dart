@@ -12,9 +12,12 @@ part 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final String _link = 'https://room-me-app.herokuapp.com/api/chat/27';
+  final String _me = 'https://room-me-app.herokuapp.com/user/me';
   List<ChatMessage> _listMessages = [];
   ChatBloc() : super(ChatInit());
   List <ChatMessage> get getChatMessages => _listMessages;
+  ChatUser _chatUser;
+  ChatUser get getChatUser => _chatUser;
 
   @override
   Stream<ChatState> mapEventToState(
@@ -24,6 +27,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       print("Chat iniciado");
       yield MessagesLoadingState();
       await _getMessages();
+      await _getUser();
       yield ChatFetched();
     }
     else if(event is ImagePickedEvent){
@@ -53,6 +57,21 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           avatar: "https://room-me-app.herokuapp.com/user/${element['authorId']}/image"
         )
       )).toList();
+    }catch(e){
+      print(e);
+    }
+  }
+
+  _getUser() async {
+    try{
+      HttpClient c = HttpClient.getClient();
+      dynamic response =  await c.get(_me, null);
+      _chatUser =  ChatUser(
+        name: response['name'],
+        avatar: response['photo'],
+        uid: response['uid'].toString()
+      );
+        
     }catch(e){
       print(e);
     }

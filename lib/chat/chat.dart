@@ -60,6 +60,10 @@ class _ChatState extends State<Chat> {
                 );       
               }
             });
+            if(state is ChatFetched && _chatBloc.getChatUser == null){
+              return Center(child: Text("No se pudo cargar usuario!"));
+            }
+
             return Container(
                   child: DashChat(
                     showAvatarForEveryMessage: true,
@@ -70,11 +74,11 @@ class _ChatState extends State<Chat> {
                         _scrollController.position.maxScrollExtent + 25.0,
                       ); 
                     },
-                    user: ChatUser(
-                      name: "Jhon Doe",
-                      uid: "10000",
-                      avatar: "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
-                    ),
+                    user: _chatBloc.getChatUser != null ? _chatBloc.getChatUser :
+                            ChatUser(
+                              name: 'Dummy',
+                              uid: 'Dummy'
+                            ),
                     dateFormat: DateFormat('dd MMMM yyyy - EEEE'), 
                     timeFormat: DateFormat('HH:mm'),
                     trailing: [
@@ -193,7 +197,7 @@ class _ChatState extends State<Chat> {
           user: ChatUser(
             name: receivedChat['authorName'].toString(),
             uid: receivedChat['authorId'].toString(),
-            avatar: "https://room-me-app.herokuapp.com/user/${receivedChat['authorId']}/image"
+            avatar: "https://room-me-app.herokuapp.com/user/${receivedChat['authorId']}/image",
           )
         )
       ));     
