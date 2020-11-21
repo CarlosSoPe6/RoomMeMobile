@@ -16,6 +16,12 @@ class _DetailsHouseState extends State<DetailsHouse> {
   House _house;
   String title = "";
 
+  @override
+  void initState() {
+    super.initState();
+    title = "";
+  }
+
   Widget _houseView(BuildContext context, double width, House state) {
     return Container(
       child: SingleChildScrollView(
@@ -273,6 +279,11 @@ class _DetailsHouseState extends State<DetailsHouse> {
                 ..showSnackBar(
                   SnackBar(content: Text("Error: ${state.error}")),
                 );
+            }
+            if (state is HouseFetchedState) {
+              setState(() {
+                title = state.house.title;
+              });
             }
           },
           builder: (context, state) {

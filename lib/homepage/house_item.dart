@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class HouseItem extends StatefulWidget {
+  final void Function(int) onTapHouse;
   final double cardHeight;
   final double cardWidth;
   final dynamic house;
 
   HouseItem(
       {Key key,
+      @required this.onTapHouse,
       @required this.cardHeight,
       @required this.cardWidth,
       @required this.house})
@@ -27,10 +29,7 @@ class _HouseItemState extends State<HouseItem> {
         margin: EdgeInsets.only(bottom: width / 10),
         clipBehavior: Clip.antiAliasWithSaveLayer,
         child: GestureDetector(
-            onTap: () {
-              Navigator.of(context)
-                  .pushNamed('/house/detail', arguments: widget.house['hid']);
-            },
+            onTap: () => this.widget.onTapHouse(widget.house['hid']),
             child: Column(children: [
               Image.network(widget.house['foto'],
                   fit: BoxFit.fill,
