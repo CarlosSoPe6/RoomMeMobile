@@ -9,10 +9,15 @@ class HouseFetchEvent extends HouseEvent {
   HouseFetchEvent({this.hid});
 }
 
-class HouseEditEvent extends HouseEvent {
-  final int hid;
+class HouseSaveEvent extends HouseEvent {
+  final House house;
+  final bool isNew;
+  HouseSaveEvent({this.isNew, this.house});
+}
 
-  HouseEditEvent({this.hid});
+class HouseUpdateFotoEvent extends HouseEvent {
+  final File file;
+  HouseUpdateFotoEvent({@required this.file});
 }
 
 class HouseCreateEvent extends HouseEvent {}

@@ -29,8 +29,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         String uri = "$_url$uid";
         var response = await client.get(uri.toString(), null);
         User user = User.fromJson(response);
-        File profileImage = File(user.photo);
-        yield UserFetchedState(user: user, profileImage: profileImage);
+        yield UserFetchedState(user: user, profileImage: user.photo);
       } catch (e) {
         print(e);
         yield UserErrorState(error: e.toString());
