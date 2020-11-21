@@ -14,8 +14,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  HomeBloc _bloc;
   Future<void> onCreateHouse(BuildContext context) async {
     await Navigator.of(context).pushNamed('/house/new');
+    print(_bloc);
   }
 
   @override
@@ -40,9 +42,9 @@ class _HomeState extends State<Home> {
         ),
         body: BlocProvider(
             create: (context) {
-              var bloc = HomeBloc();
-              bloc.add(InitialEvent(houses: bloc.client.getUserId()));
-              return bloc;
+              _bloc = HomeBloc();
+              _bloc.add(InitialEvent(houses: _bloc.client.getUserId()));
+              return _bloc;
             },
             child:
                 BlocConsumer<HomeBloc, HomeState>(listener: (context, state) {
@@ -77,8 +79,7 @@ class _HomeState extends State<Home> {
                                 house: state.body[index]);
                           }),
                       onRefresh: () async {
-                        BlocProvider.of<HomeBloc>(context)
-                            .add(InitialEvent(houses: 24));
+                        _bloc.add(InitialEvent(houses: 24));
                       });
                 else
                   return Center(

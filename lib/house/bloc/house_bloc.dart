@@ -65,6 +65,7 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
         print(e);
         yield HouseErrorState(error: "Fallo en la carga de archivo");
       }
+      yield HomeActionSuccess();
     } else {
       yield HouseErrorState(error: "No event map");
     }
