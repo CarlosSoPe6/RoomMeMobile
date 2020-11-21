@@ -71,7 +71,7 @@ Route<dynamic> buildRouter(RouteSettings settings) {
     case '/chat':
       return MaterialPageRoute<void>(
         settings: settings,
-        builder: (BuildContext context) => Chat(),
+        builder: (BuildContext context) => Chat(hid: settings.arguments),
         fullscreenDialog: true,
       );
     default:
