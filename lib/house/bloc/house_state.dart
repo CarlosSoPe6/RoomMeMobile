@@ -20,3 +20,5 @@ class HouseErrorState extends HouseState {
 
   HouseErrorState({this.error});
 }
+
+class HomeActionSuccess extends HouseState {}

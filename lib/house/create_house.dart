@@ -362,6 +362,9 @@ class _CreateHouseState extends State<CreateHouse> {
                     "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg1.cgtrader.com%2Fitems%2F826675%2F229135006e%2Fempty-room-3d-model-blend.jpg&f=1&nofb=1";
               });
             }
+            if (state is HomeActionSuccess) {
+              Navigator.of(context).pop();
+            }
           },
           builder: (context, state) {
             if (state is HouseFetchedState) {
