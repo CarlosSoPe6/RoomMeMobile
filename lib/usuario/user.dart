@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:RoomMeMobile/models/contact.dart';
 import 'package:RoomMeMobile/models/user.dart';
 import 'package:RoomMeMobile/usuario/bloc/user_bloc.dart';
 import 'package:RoomMeMobile/usuario/user_contact_item.dart';
@@ -35,6 +36,32 @@ class _UserPageState extends State<UserPage> {
     super.initState();
     _profileImage =
         "https://vimcare.com/assets/empty_user-e28be29d09f6ea715f3916ebebb525103ea068eea8842da42b414206c2523d01.png";
+  }
+
+  void updateContactCallback(
+      Contact c, String nombre, String apellido, String phone) {
+    final updateContact = new Contact(
+      uid: c.uid,
+      userId: c.userId,
+      name: nombre,
+      lastName: apellido,
+      email: c.email,
+      phone: phone,
+    );
+    _userBloc.add(UpdateContactEvent(contact: updateContact));
+  }
+
+  void createContactCallback(
+      Contact c, String nombre, String apellido, String phone) {
+    final updateContact = new Contact(
+      uid: 0,
+      userId: 0,
+      name: nombre,
+      lastName: apellido,
+      email: "",
+      phone: phone,
+    );
+    _userBloc.add(CreateContactEvent(contact: updateContact));
   }
 
   _displayPhotoDialog(BuildContext context) async {
@@ -110,7 +137,7 @@ class _UserPageState extends State<UserPage> {
         });
   }
 
-  Widget _userView(BuildContext context, double width) {
+  Widget _userView(BuildContext context, double width, List<Contact> contacts) {
     return Center(
       child: SingleChildScrollView(
         child: Column(
@@ -225,10 +252,12 @@ class _UserPageState extends State<UserPage> {
                 child: ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
-                  itemCount: 1,
+                  itemCount: contacts.length,
                   itemBuilder: (context, index) {
                     return new UserContactItem(
-                        index: index, name: 'Carlos Soto', phone: '1234567890');
+                      contact: contacts[index],
+                      updateCallback: updateContactCallback,
+                    );
                   },
                 ),
               ),
@@ -299,13 +328,13 @@ class _UserPageState extends State<UserPage> {
           }
         }, builder: (context, state) {
           if (state is UserFetchedState) {
-            return _userView(context, width);
+            return _userView(context, width, state.contacts);
           }
           return Container(
-              // child: Center(
-              //   child: CircularProgressIndicator(),
-              // ),
-              );
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
         }),
       ),
     );

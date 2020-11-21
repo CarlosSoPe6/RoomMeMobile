@@ -37,3 +37,13 @@ class UserUpdateEvent extends UserEvent {
   final File profileImage;
   UserUpdateEvent({this.profileImage, this.user});
 }
+
+class CreateContactEvent extends UserEvent {
+  final Contact contact;
+  CreateContactEvent({this.contact});
+}
+
+class UpdateContactEvent extends UserEvent {
+  final Contact contact;
+  UpdateContactEvent({this.contact});
+}

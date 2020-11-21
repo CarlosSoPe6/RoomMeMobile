@@ -76,6 +76,15 @@ class HttpClient {
     return response.body;
   }
 
+  dynamic patch(final String url, final Map<String, dynamic> body) async {
+    final net.Response response = await net.patch(
+      url,
+      headers: headers,
+      body: jsonEncode(body),
+    );
+    return response.body;
+  }
+
   dynamic delete(final String url, final Map<String, dynamic> params) async {
     final net.Response response = await net.delete(
       url,
