@@ -17,7 +17,20 @@ class _HomeState extends State<Home> {
   HomeBloc _bloc;
   Future<void> onCreateHouse(BuildContext context) async {
     await Navigator.of(context).pushNamed('/house/new');
-    print(_bloc);
+    _bloc.add(InitialEvent(houses: _bloc.client.getUserId()));
+  }
+
+  void Function(int) onTapHouse(BuildContext context) {
+    void onTapClosure(int hid) {
+      Navigator.of(context)
+          .pushNamed('/house/detail', arguments: hid)
+          .then((value) {
+        BlocProvider.of<HomeBloc>(context)
+            .add(InitialEvent(houses: _bloc.client.getUserId()));
+      });
+    }
+
+    return onTapClosure;
   }
 
   @override
@@ -40,7 +53,7 @@ class _HomeState extends State<Home> {
                 })
           ],
         ),
-        body: BlocProvider(
+        body: BlocProvider<HomeBloc>(
             create: (context) {
               _bloc = HomeBloc();
               _bloc.add(InitialEvent(houses: _bloc.client.getUserId()));
@@ -74,6 +87,7 @@ class _HomeState extends State<Home> {
                           itemCount: state.body.length,
                           itemBuilder: (BuildContext context, int index) {
                             return HouseItem(
+                                onTapHouse: onTapHouse(context),
                                 cardWidth: cardWidth,
                                 cardHeight: cardHeight,
                                 house: state.body[index]);
