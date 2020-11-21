@@ -28,10 +28,21 @@ Route<dynamic> buildRouter(RouteSettings settings) {
         builder: (BuildContext context) => Home(houses: settings.arguments),
         fullscreenDialog: true,
       );
-    case '/user':
+    case '/user/me':
       return MaterialPageRoute<void>(
         settings: settings,
-        builder: (BuildContext context) => UserPage(),
+        builder: (BuildContext context) => UserPage(
+          isMe: true,
+        ),
+        fullscreenDialog: true,
+      );
+    case '/user/id':
+      return MaterialPageRoute<void>(
+        settings: settings,
+        builder: (BuildContext context) => UserPage(
+          isMe: false,
+          uid: settings.arguments,
+        ),
         fullscreenDialog: true,
       );
     case '/house/detail':

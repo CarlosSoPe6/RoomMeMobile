@@ -249,8 +249,11 @@ class _DetailsHouseState extends State<DetailsHouse> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed('/house/edit', arguments: _house);
+        onPressed: () async {
+          await Navigator.of(context)
+              .pushNamed('/house/edit', arguments: _house);
+          var hid = widget.hid;
+          _houseBloc.add(HouseFetchEvent(hid: hid));
         },
         child: Icon(
           Icons.settings,

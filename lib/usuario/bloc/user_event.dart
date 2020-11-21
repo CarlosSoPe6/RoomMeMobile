@@ -8,7 +8,6 @@ class UserFetchEvent extends UserEvent {
   UserFetchEvent({this.uid});
 }
 
-
 class UserUpdateName extends UserEvent {
   final String name;
   final String lastName;
@@ -33,7 +32,18 @@ class UserDeleteContact extends UserEvent {
   UserDeleteContact({this.index});
 }
 
-class UserImageUpdateEvent extends UserEvent {
+class UserUpdateEvent extends UserEvent {
+  final User user;
   final File profileImage;
-  UserImageUpdateEvent({this.profileImage});
+  UserUpdateEvent({this.profileImage, this.user});
+}
+
+class CreateContactEvent extends UserEvent {
+  final Contact contact;
+  CreateContactEvent({this.contact});
+}
+
+class UpdateContactEvent extends UserEvent {
+  final Contact contact;
+  UpdateContactEvent({this.contact});
 }
