@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:RoomMeMobile/models/user.dart';
 import 'package:RoomMeMobile/usuario/bloc/user_bloc.dart';
 import 'package:RoomMeMobile/usuario/user_contact_item.dart';
 import 'package:RoomMeMobile/utils/LocalNetImageProvider.dart';
@@ -9,9 +10,10 @@ import 'package:image_picker/image_picker.dart';
 enum Product { Galeria, Camara }
 
 class UserPage extends StatefulWidget {
-  @override
-  File f = File(
-      'https://res.cloudinary.com/dgahmwjbv/image/upload/v1602784593/WhatsApp_Image_2020-10-15_at_12.29.43_PM_e8unq1.jpg');
+  final bool isMe;
+  final int uid;
+  UserPage({@required this.isMe, this.uid});
+
   _UserPageState createState() => _UserPageState();
 }
 
@@ -24,8 +26,21 @@ class _UserPageState extends State<UserPage> {
   String _name = "";
   UserBloc _userBloc;
   String _profileImage;
+  File image = null;
+
+  User _stateUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _profileImage =
+        "https://vimcare.com/assets/empty_user-e28be29d09f6ea715f3916ebebb525103ea068eea8842da42b414206c2523d01.png";
+  }
 
   _displayPhotoDialog(BuildContext context) async {
+    if (!widget.isMe) {
+      return null;
+    }
     return await showDialog<Product>(
       context: context,
       barrierDismissible: true,
@@ -37,8 +52,10 @@ class _UserPageState extends State<UserPage> {
               onPressed: () async {
                 final pickedImage =
                     await _picker.getImage(source: ImageSource.gallery);
-                final image = File(pickedImage.path);
-                _userBloc.add(UserImageUpdateEvent(profileImage: image));
+                image = File(pickedImage.path);
+                setState(() {
+                  _profileImage = image.path;
+                });
                 Navigator.of(context).pop();
               },
               child: const Text('Galeria'),
@@ -47,8 +64,10 @@ class _UserPageState extends State<UserPage> {
               onPressed: () async {
                 final pickedImage =
                     await _picker.getImage(source: ImageSource.camera);
-                final image = File(pickedImage.path);
-                _userBloc.add(UserImageUpdateEvent(profileImage: image));
+                image = File(pickedImage.path);
+                setState(() {
+                  _profileImage = image.path;
+                });
                 Navigator.of(context).pop();
               },
               child: const Text('Cámara'),
@@ -68,10 +87,12 @@ class _UserPageState extends State<UserPage> {
             content: Column(
               children: [
                 TextField(
+                  enabled: widget.isMe,
                   controller: _userNameController,
                   decoration: InputDecoration(hintText: "Nombre"),
                 ),
                 TextField(
+                  enabled: widget.isMe,
                   controller: _userLastnameController,
                   decoration: InputDecoration(hintText: "Apellido"),
                 )
@@ -155,6 +176,7 @@ class _UserPageState extends State<UserPage> {
                                   style:
                                       TextStyle(fontWeight: FontWeight.w300)),
                               TextField(
+                                enabled: widget.isMe,
                                 controller: _userEmailController,
                               )
                             ],
@@ -170,6 +192,7 @@ class _UserPageState extends State<UserPage> {
                                   style:
                                       TextStyle(fontWeight: FontWeight.w300)),
                               TextField(
+                                enabled: widget.isMe,
                                 controller: _userPhoneController,
                               )
                             ],
@@ -226,13 +249,33 @@ class _UserPageState extends State<UserPage> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(''),
-      ),
+      appBar: AppBar(title: Text(''), actions: [
+        IconButton(
+            icon: Icon(Icons.save),
+            onPressed: () {
+              print(_stateUser);
+              var user = new User(
+                uid: _stateUser.uid,
+                name: _userNameController.text,
+                lastName: _userLastnameController.text,
+                email: _userEmailController.text,
+                phone: _userPhoneController.text,
+                photo: _stateUser.photo,
+              );
+              _userBloc.add(UserUpdateEvent(
+                user: user,
+                profileImage: image,
+              ));
+            }),
+      ]),
       body: BlocProvider(
         create: (context) {
           _userBloc = UserBloc();
-          _userBloc.add(UserFetchEvent(uid: _userBloc.client.getUserId()));
+          if (widget.isMe) {
+            _userBloc.add(UserFetchEvent(uid: _userBloc.client.getUserId()));
+          } else {
+            _userBloc.add(UserFetchEvent(uid: widget.uid));
+          }
           return _userBloc;
         },
         child: BlocConsumer<UserBloc, UserState>(listener: (context, state) {
@@ -244,12 +287,15 @@ class _UserPageState extends State<UserPage> {
               );
           }
           if (state is UserFetchedState) {
+            _stateUser = state.user;
             _userEmailController.text = state.user.email;
             _userPhoneController.text = state.user.phone;
             _name = state.user.name + " " + state.user.lastName;
             _userNameController.text = state.user.name;
             _userLastnameController.text = state.user.lastName;
-            _profileImage = state.profileImage;
+            setState(() {
+              _profileImage = state.profileImage;
+            });
           }
         }, builder: (context, state) {
           if (state is UserFetchedState) {

@@ -36,7 +36,7 @@ class _HomeState extends State<Home> {
             IconButton(
                 icon: Icon(Icons.people),
                 onPressed: () {
-                  Navigator.of(context).pushNamed('/user');
+                  Navigator.of(context).pushNamed('/user/me');
                 })
           ],
         ),

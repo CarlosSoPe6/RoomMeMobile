@@ -13,6 +13,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final String _url = "https://room-me-app.herokuapp.com/user/";
   final String _uploadUrl =
       "https://room-me-app.herokuapp.com/image/upload/user";
+  final String _updateUrl = "https://room-me-app.herokuapp.com/user/me";
   HttpClient client;
 
   UserBloc() : super(UserInitial()) {
@@ -34,15 +35,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         print(e);
         yield UserErrorState(error: e.toString());
       }
-    } else if (event is UserImageUpdateEvent) {
+    } else if (event is UserUpdateEvent) {
       try {
+        final eventUser = event.user;
         final profileImage = event.profileImage;
-        final success = await client.uploadImage(_uploadUrl, profileImage);
-        if (success) {
-          yield UserImageUpdatedState(profileImage: profileImage);
-        } else {
-          yield UserErrorState(error: "Failed to load image");
+        await client.put(_updateUrl, eventUser.toJson());
+        if (profileImage != null) {
+          await client.uploadImage(_uploadUrl, profileImage);
         }
+        final uid = eventUser.uid;
+        String uri = "$_url$uid";
+        var response = await client.get(uri.toString(), null);
+        User user = User.fromJson(response);
+        yield UserFetchedState(user: user, profileImage: user.photo);
       } catch (e) {
         print(e);
         yield UserErrorState(error: "Failed to load image");
