@@ -37,7 +37,11 @@ class _HomeState extends State<Home> {
           ],
         ),
         body: BlocProvider(
-            create: (context) => HomeBloc()..add(InitialEvent(houses: 24)),
+            create: (context) {
+              var bloc = HomeBloc();
+              bloc.add(InitialEvent(houses: bloc.client.getUserId()));
+              return bloc;
+            },
             child:
                 BlocConsumer<HomeBloc, HomeState>(listener: (context, state) {
               // para mostrar dialogos o snackbars
@@ -75,7 +79,23 @@ class _HomeState extends State<Home> {
                             .add(InitialEvent(houses: 24));
                       });
                 else
-                  return Center(child: Text('Sin casas disponibles'));
+                  return Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Text('Sin casas disponibles'),
+                        ),
+                        RaisedButton(onPressed: () async {
+                          await Navigator.of(context).pushNamed('/house/new');
+                          var bloc = BlocProvider.of<HomeBloc>(context);
+                          bloc.add(
+                              InitialEvent(houses: bloc.client.getUserId()));
+                        })
+                      ],
+                    ),
+                  );
               } else
                 return Center(child: Text('Sin casas disponibles'));
             })));

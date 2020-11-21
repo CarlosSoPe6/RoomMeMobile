@@ -13,6 +13,8 @@ class HttpClient {
   Map<String, String> headers = Map();
   Map<String, String> cookies = Map();
 
+  int userId;
+
   static HttpClient _client = null;
 
   HttpClient() {
@@ -92,10 +94,18 @@ class HttpClient {
       }
       // print(response.headers);
       _updateCookie(response);
+      var user =
+          await this.get('https://room-me-app.herokuapp.com/user/me', null);
+      print(user);
+      userId = user['uid'];
       return true;
     } catch (e) {
       return false;
     }
+  }
+
+  int getUserId() {
+    return userId;
   }
 
   String _generateCookieHeader() {
