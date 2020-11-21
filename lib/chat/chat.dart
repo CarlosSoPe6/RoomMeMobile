@@ -121,7 +121,7 @@ class _ChatState extends State<Chat> {
                     messageTextBuilder: _createText,
                     messageTimeBuilder: _createDate,
                     messageImageBuilder: _createImage,
-                    //avatarBuilder: _createAvatar,
+                    avatarBuilder: _createAvatar,
                     textBeforeImage: false,
                     inputContainerStyle: BoxDecoration(
                       border: Border.all(color: Theme.of(context).primaryColor, width: 5.0),
@@ -162,16 +162,21 @@ class _ChatState extends State<Chat> {
     return Image.file(File(image), );
   }
 
-  // Widget _createAvatar(ChatUser usr)  {
+  Widget _createAvatar(ChatUser usr)  {
+    if(usr.avatar != null){
+        return CircleAvatar(
+        radius: 20,
+        backgroundImage: NetworkImage(usr.avatar),
+      );
+    }else{
+       return CircleAvatar(
+        radius: 20,
+        backgroundColor: Color.fromARGB(200, 33, 150, int.parse(usr.uid) % 255)
+      );
+    }
     
-  //   if(_chatBloc.getInvalidAvatars.contains(usr.uid)){
-  //       return CircleAvatar(
-  //       radius: 20,
-  //       backgroundImage: ,
-  //     )
-  //   }
     
-  // }
+  }
 
   Widget _footerImage(){
     return Container(

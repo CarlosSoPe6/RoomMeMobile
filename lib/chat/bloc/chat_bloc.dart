@@ -16,7 +16,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final String _link = 'https://room-me-app.herokuapp.com/api/chat/';
   final String _me = 'https://room-me-app.herokuapp.com/user/me';
   List<ChatMessage> _listMessages = [];
-  List<String> _invalidAvatars = [];
+  List<int> _invalidAvatars = [];
   ChatBloc() : super(ChatInit());
   List <ChatMessage> get getChatMessages => _listMessages;
   ChatUser _chatUser;
@@ -59,14 +59,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   _getMessages(String houseId) async{
     
-    print(_invalidAvatars);
+
     try{
       HttpClient c = HttpClient.getClient();
       List<dynamic> response =  await c.get(_link + houseId, null);
       _listMessages =  response.map( (element)  {
         String imageUrl = "https://room-me-app.herokuapp.com/user/${element['authorId']}/image";
-        print("Checando Avatares");
-        if(_invalidAvatars.contains(element['authorId'].toString())){
+        if(_invalidAvatars.contains(element['authorId'])){
           imageUrl = null;
         }
           return ChatMessage(
@@ -95,9 +94,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       String imageLink = "https://room-me-app.herokuapp.com/user/${member}/image";
       net.Response responseImage =  await net.get(imageLink);
       if(responseImage.statusCode != 200){
-        _invalidAvatars.add(member.toString());
-        print("Invalid Avatar");
-        print(_invalidAvatars);
+        _invalidAvatars.add(member);
       }
     }
   }
