@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:RoomMeMobile/http/client.dart';
 import 'package:RoomMeMobile/models/house.dart';
+import 'package:RoomMeMobile/models/user.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -16,6 +17,8 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
       "https://room-me-app.herokuapp.com/image/upload/house/";
   HttpClient client;
   File imageToUpload = null;
+  List<User> _usuarios = List();
+  List<User> get getUsers => _usuarios;
 
   HouseBloc() : super(HouseInitial()) {
     client = HttpClient.getClient();
@@ -33,6 +36,7 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
         var response = (await client.get(uri.toString(), null));
         print(response);
         House house = House.fromJson(response);
+        await _getAllUsers();
         yield HouseFetchedState(house: house);
       } catch (e) {
         print(e);
@@ -69,5 +73,13 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
     } else {
       yield HouseErrorState(error: "No event map");
     }
+  }
+
+  _getAllUsers() async {
+    String uriUsers = "https://room-me-app.herokuapp.com/user/";
+    List<dynamic> userResponse = await client.get(uriUsers, null);
+    userResponse.forEach((element) {
+      _usuarios.add(User.fromJson(element));
+    });
   }
 }

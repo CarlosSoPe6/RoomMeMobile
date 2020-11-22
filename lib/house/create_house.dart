@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:RoomMeMobile/house/bloc/house_bloc.dart';
+import 'package:RoomMeMobile/utils/custom_search_delegate.dart';
 import 'package:RoomMeMobile/models/house.dart';
 import 'package:RoomMeMobile/utils/LocalNetImageProvider.dart';
 import 'package:flutter/material.dart';
@@ -296,6 +297,12 @@ class _CreateHouseState extends State<CreateHouse> {
       appBar: AppBar(
         title: Text("Edición"),
         actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 20.0),
+            child: IconButton(icon: Icon(Icons.group_add), onPressed: (){
+              showSearch(context: context, delegate: CustomSearchDelegate(listUsers: _houseBloc.getUsers));
+            }),
+          ),
           Padding(
             padding: EdgeInsets.only(right: 20.0),
             child: GestureDetector(

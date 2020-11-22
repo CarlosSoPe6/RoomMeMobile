@@ -20,4 +20,9 @@ class HouseUpdateFotoEvent extends HouseEvent {
   HouseUpdateFotoEvent({@required this.file});
 }
 
+class AddHousmatesEvent extends HouseEvent {
+  
+  AddHousmatesEvent();
+
+}
 class HouseCreateEvent extends HouseEvent {}
