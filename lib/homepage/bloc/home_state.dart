@@ -11,6 +11,9 @@ class InitialState extends HomeState {
   final List<Map<String, dynamic>> body;
 
   InitialState({@required this.body});
+
+  @override
+  List<Object> get props => [body];
 }
 
 class ErrorState extends HomeState {

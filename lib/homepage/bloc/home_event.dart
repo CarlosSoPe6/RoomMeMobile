@@ -8,9 +8,5 @@ const HomeEvent();
 }
 
 class InitialEvent extends HomeEvent {
-  final int houses;
-
-  InitialEvent({
-    @required this.houses
-  });
+  InitialEvent();
 }

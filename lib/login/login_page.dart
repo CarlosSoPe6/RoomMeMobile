@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
                 );
               _loginBloc.add(InitialEvent());
             }else if(state is LoginSuccessState){
-              Navigator.of(context).pushReplacementNamed('/home', arguments: new List());
+              Navigator.of(context).pushReplacementNamed('/home');
             }
           },
           builder: (context, state) {
