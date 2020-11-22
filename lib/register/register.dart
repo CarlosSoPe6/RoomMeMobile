@@ -54,7 +54,6 @@ class _RegisterState extends State<Register> {
         create: (context) => MainBloc()..add(InitialEvent()),
         child: BlocConsumer<MainBloc, CustomState>(
           listener: (context, state) {
-            // para mostrar dialogos o snackbars
             if (state is ErrorState) {
               Scaffold.of(context)
                 ..hideCurrentSnackBar()
@@ -68,7 +67,7 @@ class _RegisterState extends State<Register> {
                   SnackBar(content: Text("Successful registration")),
                 );
               sleep(Duration(seconds: 1));
-              Navigator.of(context).pushReplacementNamed('/home', arguments: new List());
+              Navigator.of(context).pushReplacementNamed('/home');
             }
           },
           builder: (context, state) {

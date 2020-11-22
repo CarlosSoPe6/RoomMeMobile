@@ -23,7 +23,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (event is InitialEvent) {
       List<Map<String, dynamic>> houses = await _getHouses();
       yield InitialState(body: houses);
-      // yield InitialState(body: [{'foto': 'https://q4g9y5a8.rocketcdn.me/wp-content/uploads/2020/02/home-banner-2020-02-min.jpg', 'title': 'Casa de Maki'}]);
     }
   }
 

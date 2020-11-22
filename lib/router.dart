@@ -1,4 +1,5 @@
 import 'package:RoomMeMobile/chat/chat.dart';
+import 'package:RoomMeMobile/dashboard/dashboard.dart';
 import 'package:RoomMeMobile/house/create_house.dart';
 import 'package:RoomMeMobile/house/details_house.dart';
 import 'package:RoomMeMobile/login/login_page.dart';
@@ -25,7 +26,13 @@ Route<dynamic> buildRouter(RouteSettings settings) {
     case '/home':
       return MaterialPageRoute<void>(
         settings: settings,
-        builder: (BuildContext context) => Home(houses: settings.arguments),
+        builder: (BuildContext context) => Home(),
+        fullscreenDialog: true,
+      );
+    case '/dashboard':
+      return MaterialPageRoute<bool>(
+        settings: settings,
+        builder: (BuildContext context) => DashboardPage(houses: settings.arguments),
         fullscreenDialog: true,
       );
     case '/user/me':

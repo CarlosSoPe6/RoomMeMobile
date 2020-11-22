@@ -21,33 +21,35 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Inicio de Sesión"),
-        ),
-        body: BlocProvider(
-            create: (context) {
-              _loginBloc = LoginBloc();
-              return _loginBloc..add(InitialEvent());
-            },
-            child:
-                BlocConsumer<LoginBloc, LoginState>(listener: (context, state) {
-              print(state);
-              if (state is LoginErrorState) {
-                Scaffold.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(content: Text("Error: ${state.error}")),
-                  );
-                _loginBloc.add(InitialEvent());
-              } else if (state is LoginSuccessState) {
-                Navigator.of(context)
-                    .popAndPushNamed('/home', arguments: new List());
-              }
-            }, builder: (context, state) {
-              return SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(children: [
+      appBar: AppBar(
+        title: Text("Inicio de Sesión"),
+      ),
+      body: BlocProvider(
+        create: (context) {
+            _loginBloc = LoginBloc();
+            return _loginBloc..add(InitialEvent());
+        },
+        child: BlocConsumer<LoginBloc, LoginState>(
+          listener: (context, state) {
+            print(state);
+            if(state is LoginErrorState){
+              
+              Scaffold.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(content: Text("Error: ${state.error}")),
+                );
+              _loginBloc.add(InitialEvent());
+            }else if(state is LoginSuccessState){
+              Navigator.of(context).pushReplacementNamed('/home');
+            }
+          },
+          builder: (context, state) {
+            return SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
                     Padding(
                       padding: const EdgeInsets.all(70.0),
                       child: Container(
