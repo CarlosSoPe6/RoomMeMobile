@@ -1,16 +1,26 @@
 import 'package:RoomMeMobile/house/bloc/house_bloc.dart';
 import 'package:RoomMeMobile/models/house.dart';
+import 'package:RoomMeMobile/utils/LocalNetImageProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DetailsHouse extends StatefulWidget {
+  final int hid;
+  DetailsHouse({@required this.hid});
   @override
   _DetailsHouseState createState() => _DetailsHouseState();
 }
 
 class _DetailsHouseState extends State<DetailsHouse> {
   HouseBloc _houseBloc;
+  House _house;
   String title = "";
+
+  @override
+  void initState() {
+    super.initState();
+    title = "";
+  }
 
   Widget _houseView(BuildContext context, double width, House state) {
     return Container(
@@ -20,7 +30,7 @@ class _DetailsHouseState extends State<DetailsHouse> {
             ClipRRect(
               child: Image(
                 fit: BoxFit.fill,
-                image: NetworkImage(
+                image: LocalNetImageProvider(
                   state.foto,
                 ),
                 width: width,
@@ -240,13 +250,16 @@ class _DetailsHouseState extends State<DetailsHouse> {
           IconButton(
               icon: Icon(Icons.chat_bubble, color: Colors.white),
               onPressed: () {
-                Navigator.of(context).pushNamed('/chat');
+                Navigator.of(context).pushNamed('/chat', arguments: _house.hid);
               })
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed('/house/edit', arguments: 10);
+        onPressed: () async {
+          await Navigator.of(context)
+              .pushNamed('/house/edit', arguments: _house);
+          var hid = widget.hid;
+          _houseBloc.add(HouseFetchEvent(hid: hid));
         },
         child: Icon(
           Icons.settings,
@@ -254,7 +267,8 @@ class _DetailsHouseState extends State<DetailsHouse> {
       ),
       body: BlocProvider(
         create: (BuildContext context) {
-          _houseBloc = HouseBloc()..add(HouseFetchEvent(hid: 10));
+          var hid = widget.hid;
+          _houseBloc = HouseBloc()..add(HouseFetchEvent(hid: hid));
           return _houseBloc;
         },
         child: BlocConsumer<HouseBloc, HouseState>(
@@ -266,9 +280,15 @@ class _DetailsHouseState extends State<DetailsHouse> {
                   SnackBar(content: Text("Error: ${state.error}")),
                 );
             }
+            if (state is HouseFetchedState) {
+              setState(() {
+                title = state.house.title;
+              });
+            }
           },
           builder: (context, state) {
             if (state is HouseFetchedState) {
+              _house = state.house;
               title = state.house.title;
               return _houseView(context, width, state.house);
             }

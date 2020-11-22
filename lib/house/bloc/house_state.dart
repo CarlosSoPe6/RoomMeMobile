@@ -12,9 +12,7 @@ class HouseFetchedState extends HouseState {
 }
 
 class HouseCreateState extends HouseState {
-  final House house;
-
-  HouseCreateState({this.house});
+  HouseCreateState();
 }
 
 class HouseErrorState extends HouseState {
@@ -22,3 +20,5 @@ class HouseErrorState extends HouseState {
 
   HouseErrorState({this.error});
 }
+
+class HomeActionSuccess extends HouseState {}

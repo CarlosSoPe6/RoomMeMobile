@@ -7,8 +7,9 @@ class UserInitial extends UserState {}
 
 class UserFetchedState extends UserState {
   final User user;
-  final File profileImage;
-  UserFetchedState({this.user, this.profileImage});
+  final String profileImage;
+  final List<Contact> contacts;
+  UserFetchedState({this.user, this.profileImage, this.contacts});
 }
 
 class UserImageUpdatedState extends UserState {

@@ -13,6 +13,8 @@ class HttpClient {
   Map<String, String> headers = Map();
   Map<String, String> cookies = Map();
 
+  int userId;
+
   static HttpClient _client = null;
 
   HttpClient() {
@@ -34,18 +36,19 @@ class HttpClient {
     );
     try {
       return jsonDecode(response.body);
-    } catch(e) {
+    } catch (e) {
       return [];
     }
   }
 
   dynamic post(final String url, final Map<String, dynamic> body) async {
+    print(jsonEncode(body));
     final net.Response response = await net.post(
       url,
       headers: headers,
       body: jsonEncode(body),
     );
-    return jsonDecode(response.body);
+    return response.body;
   }
 
   Future<bool> uploadImage(final String url, final File file) async {
@@ -70,7 +73,16 @@ class HttpClient {
       headers: headers,
       body: jsonEncode(body),
     );
-    return jsonDecode(response.body);
+    return response.body;
+  }
+
+  dynamic patch(final String url, final Map<String, dynamic> body) async {
+    final net.Response response = await net.patch(
+      url,
+      headers: headers,
+      body: jsonEncode(body),
+    );
+    return response.body;
   }
 
   dynamic delete(final String url, final Map<String, dynamic> params) async {
@@ -91,10 +103,18 @@ class HttpClient {
       }
       // print(response.headers);
       _updateCookie(response);
+      var user =
+          await this.get('https://room-me-app.herokuapp.com/user/me', null);
+      print(user);
+      userId = user['uid'];
       return true;
     } catch (e) {
       return false;
     }
+  }
+
+  int getUserId() {
+    return userId;
   }
 
   String _generateCookieHeader() {

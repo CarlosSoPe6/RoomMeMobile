@@ -1,15 +1,18 @@
 import 'dart:io';
 
 import 'package:RoomMeMobile/chat/bloc/chat_bloc.dart';
+import 'package:RoomMeMobile/chat/fallback_avatar.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart';
+import 'package:RoomMeMobile/http/client.dart' as net;
 
 class Chat extends StatefulWidget {
+  final int hid;
   
-  Chat({Key key}) : super(key: key);
+  Chat({Key key, @required this.hid}) : super(key: key);
 
   @override
   _ChatState createState() => _ChatState();
@@ -22,11 +25,14 @@ class _ChatState extends State<Chat> {
   ChatBloc _chatBloc;
   Socket _socketIO;
   List<ChatMessage> _listMessages = [];
+ 
 
   @override
   void initState() {
     _connectSocket();
+    
     super.initState();
+    
   }
 
   @override
@@ -45,7 +51,7 @@ class _ChatState extends State<Chat> {
       body: BlocProvider(
         create: (context) {
           _chatBloc = ChatBloc();
-          _chatBloc..add(GetMessagesEvent());
+          _chatBloc..add(ChatInitEvent(houseId: widget.hid));
           return _chatBloc;
         },
         child: BlocConsumer<ChatBloc, ChatState>(
@@ -53,6 +59,13 @@ class _ChatState extends State<Chat> {
             
           },
           builder: (context, state) {
+            print(state);
+            if(state is ChatReady){
+              _chatBloc.add(GetMessagesEvent());
+            }
+            if(state is ChatInit  || state is MessagesLoadingState){
+              return Center(child: CircularProgressIndicator());
+            }
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
               if(state is ChatFetched){
                 _scrollController.jumpTo(
@@ -60,6 +73,10 @@ class _ChatState extends State<Chat> {
                 );       
               }
             });
+            if(state is ChatFetched && _chatBloc.getChatUser == null){
+              return Center(child: Text("No se pudo cargar usuario!"));
+            }
+
             return Container(
                   child: DashChat(
                     showAvatarForEveryMessage: true,
@@ -70,11 +87,11 @@ class _ChatState extends State<Chat> {
                         _scrollController.position.maxScrollExtent + 25.0,
                       ); 
                     },
-                    user: ChatUser(
-                      name: "Jhon Doe",
-                      uid: "10000",
-                      avatar: "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
-                    ),
+                    user: _chatBloc.getChatUser != null ? _chatBloc.getChatUser :
+                            ChatUser(
+                              name: 'Dummy',
+                              uid: 'Dummy'
+                            ),
                     dateFormat: DateFormat('dd MMMM yyyy - EEEE'), 
                     timeFormat: DateFormat('HH:mm'),
                     trailing: [
@@ -104,6 +121,7 @@ class _ChatState extends State<Chat> {
                     messageTextBuilder: _createText,
                     messageTimeBuilder: _createDate,
                     messageImageBuilder: _createImage,
+                    avatarBuilder: _createAvatar,
                     textBeforeImage: false,
                     inputContainerStyle: BoxDecoration(
                       border: Border.all(color: Theme.of(context).primaryColor, width: 5.0),
@@ -142,6 +160,22 @@ class _ChatState extends State<Chat> {
 
   Widget _createImage(String image, [ChatMessage]){
     return Image.file(File(image), );
+  }
+
+  Widget _createAvatar(ChatUser usr)  {
+    if(usr.avatar != null){
+        return CircleAvatar(
+        radius: 20,
+        backgroundImage: NetworkImage(usr.avatar),
+      );
+    }else{
+       return CircleAvatar(
+        radius: 20,
+        backgroundColor: Color.fromARGB(200, 33, 150, int.parse(usr.uid) % 255)
+      );
+    }
+    
+    
   }
 
   Widget _footerImage(){
@@ -183,9 +217,16 @@ class _ChatState extends State<Chat> {
       'autoConnect':false
     });
     _socketIO.connect();
-    _socketIO.emit('entrar','27');
+    _socketIO.emit('entrar',widget.hid.toString());
 
     _socketIO.on('chatear', (receivedChat) {
+      String imageUrl = "https://room-me-app.herokuapp.com/user/${receivedChat['authorId']}/image";
+      try{
+        Image.network(imageUrl);
+      }catch(e){
+        imageUrl = null;
+      }
+      
       _chatBloc.add(MessageReceivedEvent(chatMessage:
         ChatMessage(
           text: receivedChat['message'],
@@ -193,7 +234,7 @@ class _ChatState extends State<Chat> {
           user: ChatUser(
             name: receivedChat['authorName'].toString(),
             uid: receivedChat['authorId'].toString(),
-            avatar: "https://room-me-app.herokuapp.com/user/${receivedChat['authorId']}/image"
+            avatar: imageUrl,
           )
         )
       ));     
@@ -203,7 +244,7 @@ class _ChatState extends State<Chat> {
   _emitSocketMessage(ChatMessage chatMessage) {
     _socketIO.emit('chatear', {
       'user': chatMessage.user.uid,
-      'house': 27,
+      'house': widget.hid,
       'msg': chatMessage.text,
       'time': chatMessage.createdAt.toIso8601String()
     });
