@@ -47,7 +47,7 @@ class _HomeState extends State<Home> {
         title: Text('Mis casas'),
         actions: [
           IconButton(icon: Icon(Icons.person), onPressed: (){
-            Navigator.of(context).pushNamed('/user');
+            Navigator.of(context).pushNamed('/user/me');
           }),
           IconButton(icon: Icon(Icons.pie_chart), onPressed: () async {
             bool changes = await Navigator.of(context).pushNamed('/dashboard', arguments: houses);
