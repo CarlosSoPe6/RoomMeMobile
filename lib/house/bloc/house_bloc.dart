@@ -34,7 +34,6 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
         String uri = "$_url$hid";
         print(uri);
         var response = (await client.get(uri.toString(), null));
-        print(response);
         House house = House.fromJson(response);
         await _getAllUsers();
         yield HouseFetchedState(house: house);
