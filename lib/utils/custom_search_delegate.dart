@@ -53,13 +53,67 @@ class CustomSearchDelegate extends SearchDelegate {
     return ListView.builder(
       itemCount: suggestionList.length,
       itemBuilder: (context, index) {
+        bool inHouse = house.members.contains(suggestionList[index].uid);
         return ListTile(
           leading: Icon(
             Icons.perm_contact_cal, 
-            color: house.members.contains(suggestionList[index].uid) ? Colors.green : Colors.grey
+            color:  inHouse ? Colors.green : Colors.grey
           ),
           title: Text(suggestionList[index].name + ' ' + suggestionList[index].lastName),
-          trailing: house.members.contains(suggestionList[index].uid) ? Icon(Icons.how_to_reg, color: Colors.green) : null
+          trailing: inHouse ? Icon(Icons.how_to_reg, color: Colors.green) : null,
+          onLongPress: (){
+            showDialog(
+              context: context,
+              builder: (context) {
+                if(inHouse) {
+                  return AlertDialog(
+                  title: Text("Eliminar usuario"),
+                  content: Text(
+                    "¿Eliminar ${suggestionList[index].name} ${suggestionList[index].lastName} de la ${house.title}?",
+                    style: TextStyle(fontSize: 19),
+                  ),
+                  actions: [
+                    FlatButton(
+                      onPressed: (){
+
+                      }, 
+                      child: Text("Eliminar", style: TextStyle(color: Colors.red),)
+                    ),
+                    FlatButton(
+                      onPressed: (){
+                        Navigator.of(context).pop();
+                      }, 
+                      child: Text("Cancelar")
+                    )
+                  ],
+                );
+                }
+                else { 
+                  return AlertDialog(
+                  title: Text("Añadir usuario"),
+                  content: Text(
+                    "¿Añadir ${suggestionList[index].name} ${suggestionList[index].lastName} a ${house.title}?",
+                    style: TextStyle(fontSize: 19),
+                  ),
+                  actions: [
+                    FlatButton(
+                      onPressed: (){
+
+                      }, 
+                      child: Text("Aceptar", style: TextStyle(color: Colors.green),)
+                    ),
+                    FlatButton(
+                      onPressed: (){
+                        Navigator.of(context).pop();
+                      }, 
+                      child: Text("Cancelar")
+                    )
+                  ],
+                );
+                }
+              }
+            );
+          },
         );
       }
     );
