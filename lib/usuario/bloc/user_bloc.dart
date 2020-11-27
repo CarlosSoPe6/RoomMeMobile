@@ -83,6 +83,27 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         profileImage: user.photo,
         contacts: contacts,
       );
+    } else if (event is DeleteContactEvent) {
+      final uid = event.uid;
+      final uri = "$_contactUrl/$uid";
+      final response = await client.delete(uri, null);
+      print(response);
+      await fetchUserInfo(client.getUserId());
+      yield UserFetchedState(
+        user: user,
+        profileImage: user.photo,
+        contacts: contacts,
+      );
+    } else if (event is CreateContactEvent) {
+      final contact = event.contact;
+      final response = await client.post(_contactUrl, contact.toJson());
+      print(response);
+      await fetchUserInfo(client.getUserId());
+      yield UserFetchedState(
+        user: user,
+        profileImage: user.photo,
+        contacts: contacts,
+      );
     } else {
       yield UserErrorState(error: "No event map");
     }
