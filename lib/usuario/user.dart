@@ -24,6 +24,13 @@ class _UserPageState extends State<UserPage> {
   final TextEditingController _userLastnameController = TextEditingController();
   final TextEditingController _userEmailController = TextEditingController();
   final TextEditingController _userPhoneController = TextEditingController();
+
+  final TextEditingController _contactoNombreController =
+      TextEditingController();
+  final TextEditingController _contactoApellidoController =
+      TextEditingController();
+  final TextEditingController _contactoPhoneController =
+      TextEditingController();
   String _name = "";
   UserBloc _userBloc;
   String _profileImage;
@@ -36,6 +43,10 @@ class _UserPageState extends State<UserPage> {
     super.initState();
     _profileImage =
         "https://vimcare.com/assets/empty_user-e28be29d09f6ea715f3916ebebb525103ea068eea8842da42b414206c2523d01.png";
+  }
+
+  void deleteContactCallback(int uid) {
+    _userBloc.add(DeleteContactEvent(uid: uid));
   }
 
   void updateContactCallback(
@@ -51,17 +62,65 @@ class _UserPageState extends State<UserPage> {
     _userBloc.add(UpdateContactEvent(contact: updateContact));
   }
 
-  void createContactCallback(
-      Contact c, String nombre, String apellido, String phone) {
+  void createContactCallback(String nombre, String apellido, String phone) {
     final updateContact = new Contact(
       uid: 0,
-      userId: 0,
+      userId: this._userBloc.client.getUserId(),
       name: nombre,
       lastName: apellido,
       email: "",
       phone: phone,
     );
     _userBloc.add(CreateContactEvent(contact: updateContact));
+  }
+
+  void _showAddUser(BuildContext context) async {
+    _contactoNombreController.clear();
+    _contactoApellidoController.clear();
+    _contactoPhoneController.clear();
+    return await showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Crear contacto'),
+            content: Column(
+              children: [
+                TextField(
+                  controller: _contactoNombreController,
+                  decoration: InputDecoration(hintText: "Nombre"),
+                ),
+                TextField(
+                  controller: _contactoApellidoController,
+                  decoration: InputDecoration(hintText: "Apellido"),
+                ),
+                TextField(
+                  controller: _contactoPhoneController,
+                  decoration: InputDecoration(hintText: "Teléfono"),
+                ),
+              ],
+            ),
+            actions: [
+              new FlatButton(
+                child: new Text('Guardar'),
+                onPressed: () {
+                  createContactCallback(
+                    _contactoNombreController.text,
+                    _contactoApellidoController.text,
+                    _contactoPhoneController.text,
+                  );
+                  Navigator.of(context).pop();
+                },
+              ),
+              new FlatButton(
+                child: new Text('Cancelar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   _displayPhotoDialog(BuildContext context) async {
@@ -236,13 +295,20 @@ class _UserPageState extends State<UserPage> {
                 width: width - 20,
                 child: Card(
                   child: Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Text(
-                      "Contactos de emergencia",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-                    ),
-                  ),
+                      padding: EdgeInsets.only(top: 20, bottom: 10),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Contactos de emergencia",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w400),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.add),
+                            onPressed: () => _showAddUser(context),
+                          )
+                        ],
+                      )),
                 ),
               ),
             ),
@@ -257,6 +323,7 @@ class _UserPageState extends State<UserPage> {
                     return new UserContactItem(
                       contact: contacts[index],
                       updateCallback: updateContactCallback,
+                      deleteCallback: deleteContactCallback,
                     );
                   },
                 ),

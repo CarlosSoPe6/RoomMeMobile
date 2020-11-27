@@ -43,6 +43,11 @@ class CreateContactEvent extends UserEvent {
   CreateContactEvent({this.contact});
 }
 
+class DeleteContactEvent extends UserEvent {
+  final int uid;
+  DeleteContactEvent({this.uid});
+}
+
 class UpdateContactEvent extends UserEvent {
   final Contact contact;
   UpdateContactEvent({this.contact});

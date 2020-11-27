@@ -7,8 +7,12 @@ class UserContactItem extends StatelessWidget {
   final TextEditingController _apellidoController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final Function(Contact, String, String, String) updateCallback;
+  final Function(int) deleteCallback;
 
-  UserContactItem({@required this.contact, @required this.updateCallback}) {
+  UserContactItem(
+      {@required this.contact,
+      @required this.updateCallback,
+      @required this.deleteCallback}) {
     _nombreController.text = contact.name;
     _apellidoController.text = contact.lastName;
     _phoneController.text = contact.phone;
@@ -53,6 +57,13 @@ class UserContactItem extends StatelessWidget {
               new FlatButton(
                 child: new Text('Cancelar'),
                 onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              new FlatButton(
+                child: new Text('Eliminar'),
+                onPressed: () {
+                  this.deleteCallback(this.contact.uid);
                   Navigator.of(context).pop();
                 },
               )
