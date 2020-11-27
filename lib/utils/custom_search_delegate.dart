@@ -75,7 +75,8 @@ class CustomSearchDelegate extends SearchDelegate {
                   actions: [
                     FlatButton(
                       onPressed: (){
-
+                        house.members.remove(suggestionList[index].uid);
+                        Navigator.of(context).pop();
                       }, 
                       child: Text("Eliminar", style: TextStyle(color: Colors.red),)
                     ),
@@ -98,7 +99,8 @@ class CustomSearchDelegate extends SearchDelegate {
                   actions: [
                     FlatButton(
                       onPressed: (){
-
+                        house.members.add(suggestionList[index].uid);
+                        Navigator.of(context).pop();
                       }, 
                       child: Text("Aceptar", style: TextStyle(color: Colors.green),)
                     ),

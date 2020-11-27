@@ -300,7 +300,11 @@ class _CreateHouseState extends State<CreateHouse> {
           Padding(
             padding: EdgeInsets.only(right: 20.0),
             child: IconButton(icon: Icon(Icons.group_add), onPressed: (){
-              showSearch(context: context, delegate: CustomSearchDelegate(listUsers: _houseBloc.getUsers, house: widget.house));
+              showSearch(context: context, delegate: CustomSearchDelegate(listUsers: _houseBloc.getUsers, house: widget.house)).then(
+                (value) {
+                  print(widget.house.members);
+                }
+              );
             }),
           ),
           Padding(

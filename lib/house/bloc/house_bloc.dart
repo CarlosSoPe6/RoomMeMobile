@@ -48,6 +48,8 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
     } else if (event is HouseSaveEvent) {
       var isNew = event.isNew;
       var processHouse = event.house;
+      print("Modificando: " );
+      print(processHouse);
       int houseId = 0;
       try {
         if (isNew) {
