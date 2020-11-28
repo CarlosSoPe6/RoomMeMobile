@@ -321,13 +321,18 @@ class _CreateHouseState extends State<CreateHouse> {
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 20.0),
-            child: IconButton(icon: Icon(Icons.group_add), onPressed: (){
-              showSearch(context: context, delegate: CustomSearchDelegate(listUsers: _houseBloc.getUsers, house: widget.house)).then(
-                (value) {
-                  print(widget.house.members);
-                }
-              );
-            }),
+            child: IconButton(
+                icon: Icon(Icons.group_add),
+                onPressed: () {
+                  showSearch(
+                          context: context,
+                          delegate: CustomSearchDelegate(
+                              listUsers: _houseBloc.getUsers,
+                              house: widget.house))
+                      .then((value) {
+                    print(widget.house.members);
+                  });
+                }),
           ),
           Padding(
             padding: EdgeInsets.only(right: 20.0),
@@ -335,25 +340,26 @@ class _CreateHouseState extends State<CreateHouse> {
               onTap: () {
                 int hid = widget.house == null ? 0 : widget.house.hid;
                 House house = new House(
-                  hid: hid,
-                  services: widget.house == null ? [] : widget.house.services,
-                  title: _titleController.text,
-                  type: _tipoController.text,
-                  description: _descriptionController.text,
-                  // ownerId,
-                  addressLine: _direccionController.text,
-                  zipCode: _zipController.text,
-                  city: _localidadController.text,
-                  state: '',
-                  country: '',
-                  cost: int.parse(_costoController.text),
-                  roommatesLimit: int.parse(_habitantesController.text),
-                  roommatesCount:
-                      widget.house == null ? 0 : widget.house.members.length,
-                  playlistUrl: '',
-                  foto: imageURL,
-                  members: widget.house == null ? [] : widget.house.members
-                );
+                    hid: hid,
+                    services: widget.house == null ? [] : widget.house.services,
+                    title: _titleController.text,
+                    type: _tipoController.text,
+                    description: _descriptionController.text,
+                    // ownerId,
+                    addressLine: _direccionController.text,
+                    zipCode: _zipController.text,
+                    city: _localidadController.text,
+                    state: '',
+                    country: '',
+                    cost: int.parse(_costoController.text),
+                    roommatesLimit: int.parse(_habitantesController.text),
+                    roommatesCount:
+                        widget.house == null ? 0 : widget.house.members.length,
+                    playlistUrl: '',
+                    foto: imageURL,
+                    members: widget.house == null
+                        ? []
+                        : widget.house.members.toList());
                 bool isNew = widget.house == null;
                 _houseBloc.add(HouseSaveEvent(
                   house: house,
