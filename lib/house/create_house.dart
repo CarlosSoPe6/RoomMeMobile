@@ -130,7 +130,7 @@ class _CreateHouseState extends State<CreateHouse> {
                         Container(
                           width: width - 20,
                           child: Text(
-                            "Tituo",
+                            "Titulo",
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               fontSize: 18,
@@ -321,14 +321,13 @@ class _CreateHouseState extends State<CreateHouse> {
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 20.0),
-            child: IconButton(
-                icon: Icon(Icons.group_add),
-                onPressed: () {
-                  showSearch(
-                      context: context,
-                      delegate:
-                          CustomSearchDelegate(listUsers: _houseBloc.getUsers));
-                }),
+            child: IconButton(icon: Icon(Icons.group_add), onPressed: (){
+              showSearch(context: context, delegate: CustomSearchDelegate(listUsers: _houseBloc.getUsers, house: widget.house)).then(
+                (value) {
+                  print(widget.house.members);
+                }
+              );
+            }),
           ),
           Padding(
             padding: EdgeInsets.only(right: 20.0),
@@ -350,9 +349,10 @@ class _CreateHouseState extends State<CreateHouse> {
                   cost: int.parse(_costoController.text),
                   roommatesLimit: int.parse(_habitantesController.text),
                   roommatesCount:
-                      widget.house == null ? 0 : widget.house.roommatesCount,
+                      widget.house == null ? 0 : widget.house.members.length,
                   playlistUrl: '',
                   foto: imageURL,
+                  members: widget.house == null ? [] : widget.house.members
                 );
                 bool isNew = widget.house == null;
                 _houseBloc.add(HouseSaveEvent(
@@ -410,6 +410,7 @@ class _CreateHouseState extends State<CreateHouse> {
             }
           },
           builder: (context, state) {
+            print(state);
             if (state is HouseFetchedState) {
               return _houseView(context, width);
             }
