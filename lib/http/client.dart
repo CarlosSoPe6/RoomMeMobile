@@ -42,7 +42,7 @@ class HttpClient {
   }
 
   dynamic post(final String url, final Map<String, dynamic> body) async {
-    print(jsonEncode(body));
+    // print(jsonEncode(body));
     final net.Response response = await net.post(
       url,
       headers: headers,
@@ -88,8 +88,9 @@ class HttpClient {
   dynamic delete(final String url, final Map<String, dynamic> params) async {
     final net.Response response = await net.delete(
       url,
-      headers: headers,
+      headers: headers
     );
+    // print(jsonDecode(response.body));
     return jsonDecode(response.body);
   }
 

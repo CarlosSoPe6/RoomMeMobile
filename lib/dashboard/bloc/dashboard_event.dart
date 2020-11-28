@@ -24,3 +24,21 @@ class CreateTaskEvent extends DashboardEvent {
   @override
   List<Object> get props => [description, hid];
 }
+
+class DeleteTaskEvent extends DashboardEvent {
+  final int id;
+
+  DeleteTaskEvent({this.id});
+
+  @override
+  List<Object> get props => [id];
+}
+
+class EditTaskEvent extends DashboardEvent {
+  final dynamic task;
+
+  EditTaskEvent({this.task});
+
+  @override
+  List<Object> get props => [task];
+}

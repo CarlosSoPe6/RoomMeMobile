@@ -15,14 +15,15 @@ class InitialState extends DashboardState {
   List<Object> get props => [];
 }
 
-class TaskCreatedState extends DashboardState {
+class TaskChengedState extends DashboardState {
 
   final List<Map<String, dynamic>> houses;
+  final int action;
 
-  TaskCreatedState({this.houses});
+  TaskChengedState({this.houses, this.action});
 
   @override
-  List<Object> get props => [houses];
+  List<Object> get props => [houses, action];
 }
 
 class ErrorState extends DashboardState {
