@@ -83,7 +83,14 @@ class _HomeState extends State<Home> {
                   bool changes = await Navigator.of(context)
                       .pushNamed('/dashboard', arguments: houses);
                   if (changes) bloc.add(InitialEvent());
-                })
+                }),
+            IconButton(
+                icon: Icon(Icons.add_business),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamed('/house/new')
+                      .then((value) => _bloc.add(InitialEvent()));
+                }),
           ],
         ),
         body: BlocProvider(

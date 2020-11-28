@@ -36,6 +36,14 @@ class _CreateHouseState extends State<CreateHouse> {
     super.initState();
     imageURL =
         "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg1.cgtrader.com%2Fitems%2F826675%2F229135006e%2Fempty-room-3d-model-blend.jpg&f=1&nofb=1";
+    _titleController.text = '';
+    _costoController.text = '';
+    _descriptionController.text = '';
+    _direccionController.text = '';
+    _habitantesController.text = '';
+    _localidadController.text = '';
+    _zipController.text = '';
+    _tipoController.text = '';
   }
 
   @override
@@ -381,6 +389,15 @@ class _CreateHouseState extends State<CreateHouse> {
             } else if (state is HouseFetchedState) {
               setState(() {
                 imageURL = state.house.foto;
+                _titleController.text = state.house.title;
+                _costoController.text = state.house.cost.toString();
+                _descriptionController.text = state.house.description;
+                _direccionController.text = state.house.addressLine;
+                _habitantesController.text =
+                    state.house.roommatesLimit.toString();
+                _localidadController.text = state.house.city;
+                _zipController.text = state.house.zipCode;
+                _tipoController.text = state.house.type;
               });
             } else if (state is HouseCreateEvent) {
               setState(() {
@@ -394,15 +411,6 @@ class _CreateHouseState extends State<CreateHouse> {
           },
           builder: (context, state) {
             if (state is HouseFetchedState) {
-              _titleController.text = state.house.title;
-              _costoController.text = state.house.cost.toString();
-              _descriptionController.text = state.house.description;
-              _direccionController.text = state.house.addressLine;
-              _habitantesController.text =
-                  state.house.roommatesLimit.toString();
-              _localidadController.text = state.house.city;
-              _zipController.text = state.house.zipCode;
-              _tipoController.text = state.house.type;
               return _houseView(context, width);
             }
             if (state is HouseCreateState) {
