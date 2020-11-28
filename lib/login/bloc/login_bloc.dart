@@ -25,7 +25,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (result == 0) {
         yield LoginErrorState(error: "Usuario o Contraseña incorrectos");
       } else if (result == 1) {
-        yield LoginSuccessState();
+        yield LoginSuccessState(ts: DateTime.now().toIso8601String());
       } else {
         yield LoginErrorState(error: "Error al conectar con el servidor");
       }

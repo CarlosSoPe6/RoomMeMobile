@@ -94,6 +94,10 @@ class HttpClient {
     return jsonDecode(response.body);
   }
 
+  void logout() {
+    cookies = new Map<String, String>();
+  }
+
   Future<bool> login(String email, String password) async {
     try {
       var body = jsonEncode({'email': email, 'password': password});
