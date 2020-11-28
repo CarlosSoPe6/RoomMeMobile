@@ -18,6 +18,7 @@ class House extends Equatable {
   final String playlistUrl;
   final String foto;
   final int hid;
+  final List<int> members;
 
   House(
       {this.id,
@@ -36,7 +37,9 @@ class House extends Equatable {
       this.roommatesCount,
       this.playlistUrl,
       this.foto,
-      this.hid});
+      this.hid,
+      this.members
+      });
 
   factory House.fromJson(Map<String, dynamic> json) {
     return House(
@@ -57,6 +60,7 @@ class House extends Equatable {
       playlistUrl: json['playlistURL'],
       foto: json['foto'],
       hid: json['hid'],
+      members: json['members'].cast<int>()
     );
   }
 
@@ -79,6 +83,7 @@ class House extends Equatable {
     data['playlistURL'] = this.playlistUrl;
     data['foto'] = this.foto;
     data['hid'] = this.hid;
+    data['members'] = this.members;
     return data;
   }
 
@@ -100,6 +105,7 @@ class House extends Equatable {
         this.roommatesCount,
         this.playlistUrl,
         this.foto,
-        this.hid
+        this.hid,
+        this.members
       ];
 }

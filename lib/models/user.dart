@@ -7,6 +7,7 @@ class User extends Equatable {
   final String email;
   final String photo;
   final String phone;
+  final List<int> houses;
 
   User({
     this.uid,
@@ -15,6 +16,7 @@ class User extends Equatable {
     this.email,
     this.photo,
     this.phone,
+    this.houses
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class User extends Equatable {
       email: json['email'],
       photo: json['photo'],
       phone: json['phone'],
+      houses: json['houses'].cast<int>()
     );
   }
 
@@ -36,6 +39,7 @@ class User extends Equatable {
     data['email'] = this.email;
     data['photo'] = this.photo;
     data['phone'] = this.phone;
+    data['houses'] = this.houses;
     return data;
   }
 
@@ -47,5 +51,6 @@ class User extends Equatable {
         this.email,
         this.photo,
         this.phone,
+        this.houses
       ];
 }
