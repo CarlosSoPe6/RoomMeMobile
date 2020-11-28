@@ -14,11 +14,12 @@ class InitialEvent extends LoginEvent {
 
 class LoginLocalEvent extends LoginEvent {
   final String email;
-  final String password; 
+  final String password;
+  final String ts;
 
-  LoginLocalEvent({@required this.email, @required this.password});
+  LoginLocalEvent(
+      {@required this.email, @required this.password, @required this.ts});
 
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [ts, email, password];
 }
-

@@ -38,6 +38,20 @@ class _CreateHouseState extends State<CreateHouse> {
         "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg1.cgtrader.com%2Fitems%2F826675%2F229135006e%2Fempty-room-3d-model-blend.jpg&f=1&nofb=1";
   }
 
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _direccionController.dispose();
+    _localidadController.dispose();
+    _zipController.dispose();
+    _tipoController.dispose();
+    _habitantesController.dispose();
+    _costoController.dispose();
+    _houseBloc.close();
+    super.dispose();
+  }
+
   _displayPhotoDialog(BuildContext context) async {
     return await showDialog<Product>(
       context: context,
@@ -284,24 +298,29 @@ class _CreateHouseState extends State<CreateHouse> {
   }
 
   @override
-  void dispose() {
-    _houseBloc.close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
         title: Text("Edición"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 20.0),
-            child: IconButton(icon: Icon(Icons.group_add), onPressed: (){
-              showSearch(context: context, delegate: CustomSearchDelegate(listUsers: _houseBloc.getUsers));
-            }),
+            child: IconButton(
+                icon: Icon(Icons.group_add),
+                onPressed: () {
+                  showSearch(
+                      context: context,
+                      delegate:
+                          CustomSearchDelegate(listUsers: _houseBloc.getUsers));
+                }),
           ),
           Padding(
             padding: EdgeInsets.only(right: 20.0),

@@ -246,6 +246,12 @@ class _DetailsHouseState extends State<DetailsHouse> {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           IconButton(
               icon: Icon(Icons.chat_bubble, color: Colors.white),

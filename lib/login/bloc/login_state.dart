@@ -18,13 +18,16 @@ class LoginLoadingState extends LoginState {
 }
 
 class LoginSuccessState extends LoginState {
+  final String ts;
+
+  LoginSuccessState({@required this.ts});
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [ts];
 }
 
 class LoginErrorState extends LoginState {
   final String error;
-  
 
   // TODO: define and use codes
   LoginErrorState({@required this.error});

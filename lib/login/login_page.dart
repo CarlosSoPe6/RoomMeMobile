@@ -20,36 +20,39 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Inicio de Sesión"),
-      ),
-      body: BlocProvider(
-        create: (context) {
+    return new WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Inicio de Sesión"),
+          automaticallyImplyLeading: false,
+        ),
+        body: BlocProvider(
+          create: (context) {
             _loginBloc = LoginBloc();
             return _loginBloc..add(InitialEvent());
-        },
-        child: BlocConsumer<LoginBloc, LoginState>(
-          listener: (context, state) {
-            print(state);
-            if(state is LoginErrorState){
-              
-              Scaffold.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                  SnackBar(content: Text("Error: ${state.error}")),
-                );
-              _loginBloc.add(InitialEvent());
-            }else if(state is LoginSuccessState){
-              Navigator.of(context).pushReplacementNamed('/home');
-            }
           },
-          builder: (context, state) {
-            return SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
+          child: BlocConsumer<LoginBloc, LoginState>(
+            listener: (context, state) {
+              print(state);
+              if (state is LoginErrorState) {
+                Scaffold.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(content: Text("Error: ${state.error}")),
+                  );
+                _loginBloc.add(InitialEvent());
+              } else if (state is LoginSuccessState) {
+                Navigator.of(context).pushNamed('/home');
+              }
+            },
+            builder: (context, state) {
+              return SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(children: [
                     Padding(
                       padding: const EdgeInsets.all(70.0),
                       child: Container(
@@ -107,10 +110,13 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text("INICIAR SESIÓN"),
                         color: Color(0xFFFEDCD2),
                         onPressed: () {
+                          final ts = DateTime.now().toIso8601String();
                           if (_formKey.currentState.validate()) {
                             _loginBloc.add(LoginLocalEvent(
-                                email: _emailController.text,
-                                password: _passwordController.text));
+                              email: _emailController.text,
+                              password: _passwordController.text,
+                              ts: ts,
+                            ));
                           }
                         }),
                     SizedBox(
@@ -130,6 +136,10 @@ class _LoginPageState extends State<LoginPage> {
                   ]),
                 ),
               );
-            })));
+            },
+          ),
+        ),
+      ),
+    );
   }
 }
