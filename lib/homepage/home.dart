@@ -39,7 +39,35 @@ class _HomeState extends State<Home> {
     final double cardHeight = (cardWidth / 16) * 9;
     List houses = new List();
 
-    return Scaffold(
+    return new WillPopScope(
+      onWillPop: () async {
+        final result = await showDialog(
+          context: (context),
+          builder: (context) {
+            return AlertDialog(
+              title: Text('ALERTA'),
+              content: Text("¿Desea salir?"),
+              actions: [
+                FlatButton(
+                    child: Text("Si"),
+                    textColor: Colors.blue,
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    }),
+                FlatButton(
+                    child: Text("No"),
+                    textColor: Colors.red,
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    }),
+              ],
+            );
+          },
+        );
+        print(result);
+        return result;
+      },
+      child: Scaffold(
         appBar: AppBar(
           title: Text('Mis casas'),
           automaticallyImplyLeading: false,
@@ -59,13 +87,13 @@ class _HomeState extends State<Home> {
           ],
         ),
         body: BlocProvider(
-            create: (context) {
-              bloc = HomeBloc();
-              bloc.add(InitialEvent());
-              return bloc;
-            },
-            child:
-                BlocConsumer<HomeBloc, HomeState>(listener: (context, state) {
+          create: (context) {
+            bloc = HomeBloc();
+            bloc.add(InitialEvent());
+            return bloc;
+          },
+          child: BlocConsumer<HomeBloc, HomeState>(
+            listener: (context, state) {
               if (state is ErrorState) {
                 Scaffold.of(context)
                   ..hideCurrentSnackBar()
@@ -73,7 +101,8 @@ class _HomeState extends State<Home> {
                     SnackBar(content: Text("Error: ${state.error}")),
                   );
               }
-            }, builder: (context, state) {
+            },
+            builder: (context, state) {
               if (state is InitialState) {
                 houses = state.body;
                 if (state.body.length > 0)
@@ -94,6 +123,10 @@ class _HomeState extends State<Home> {
                 else
                   return Center(child: Text('Sin casas disponibles'));
               }
-            })));
+            },
+          ),
+        ),
+      ),
+    );
   }
 }

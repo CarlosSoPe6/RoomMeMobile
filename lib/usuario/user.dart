@@ -345,25 +345,34 @@ class _UserPageState extends State<UserPage> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(title: Text(''), actions: [
-        IconButton(
-            icon: Icon(Icons.save),
-            onPressed: () {
-              print(_stateUser);
-              var user = new User(
-                uid: _stateUser.uid,
-                name: _userNameController.text,
-                lastName: _userLastnameController.text,
-                email: _userEmailController.text,
-                phone: _userPhoneController.text,
-                photo: _stateUser.photo,
-              );
-              _userBloc.add(UserUpdateEvent(
-                user: user,
-                profileImage: image,
-              ));
-            }),
-      ]),
+      appBar: AppBar(
+        title: Text(''),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.save),
+              onPressed: () {
+                print(_stateUser);
+                var user = new User(
+                  uid: _stateUser.uid,
+                  name: _userNameController.text,
+                  lastName: _userLastnameController.text,
+                  email: _userEmailController.text,
+                  phone: _userPhoneController.text,
+                  photo: _stateUser.photo,
+                );
+                _userBloc.add(UserUpdateEvent(
+                  user: user,
+                  profileImage: image,
+                ));
+              }),
+        ],
+      ),
       body: BlocProvider(
         create: (context) {
           _userBloc = UserBloc();

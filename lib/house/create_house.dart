@@ -304,6 +304,12 @@ class _CreateHouseState extends State<CreateHouse> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Edición"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 20.0),
