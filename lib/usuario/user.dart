@@ -211,20 +211,25 @@ class _UserPageState extends State<UserPage> {
                       child: Padding(
                         padding: EdgeInsets.only(top: 10),
                         child: GestureDetector(
-                            onTap: () {
-                              _displayPhotoDialog(context);
-                            },
-                            child: ClipRRect(
-                              child: Image(
+                          onTap: () {
+                            _displayPhotoDialog(context);
+                          },
+                          child: ClipRRect(
+                            child:  _profileImage == null || _profileImage == ""
+                            ? Image.asset(
+                                'assets/user.jpg',
+                                height: 100,
+                                width: 100
+                              )
+                            : Image(
                                 height: 100,
                                 width: 100,
-                                image: LocalNetImageProvider(
-                                  _profileImage,
-                                ),
+                                image: LocalNetImageProvider(_profileImage)
                               ),
-                              borderRadius: BorderRadius.circular(50),
-                            )),
-                      ),
+                            borderRadius: BorderRadius.circular(50),
+                          )
+                        )
+                      )
                     ),
                     // Text View
                     Stack(
