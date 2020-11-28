@@ -36,6 +36,12 @@ class _DashboardPageState extends State<DashboardPage> {
             key: _scaffoldKey,
             appBar: AppBar(
               title: Text('Tareas'),
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.of(context).pop(changed);
+                },
+              ),
             ),
             body: BlocProvider(
                 create: (context) {
