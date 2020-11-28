@@ -48,8 +48,6 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
     } else if (event is HouseSaveEvent) {
       var isNew = event.isNew;
       var processHouse = event.house;
-      print("Modificando: " );
-      print(processHouse);
       int houseId = 0;
       try {
         if (isNew) {
@@ -66,6 +64,7 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
         if (imageToUpload != null) {
           await client.uploadImage("$_uploadUrl$houseId", imageToUpload);
         }
+        await _updateUsersHouses(processHouse.members, processHouse.hid);
       } catch (e) {
         print(e);
         yield HouseErrorState(error: "Fallo en la carga de archivo");
@@ -82,5 +81,42 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
     userResponse.forEach((element) {
       _usuarios.add(User.fromJson(element));
     });
+  }
+
+  _updateUsersHouses(List<dynamic> updatedMembers, int houseId) async {
+    String uriUserHouses = "https://room-me-app.herokuapp.com/user/houses";
+    List<User> previousUsers = _usuarios.where((user) => user.houses.contains(houseId)).toList();
+    List<int> previousUsersId = previousUsers.map((e) => e.uid).toList();
+    print("Usuarios Anteriores: $previousUsersId");
+    print("Usuarios Nuevos: $updatedMembers");
+
+    print("Añadiendo usuarios");
+    for(var i = 0; i < updatedMembers.length; i++) {
+      if(!previousUsersId.contains(updatedMembers[i])) {
+        User newResident = _usuarios.firstWhere((element) => element.uid == updatedMembers[i]);
+        newResident.houses.add(houseId);
+        var response = await client.put(uriUserHouses, {
+          'uid' : updatedMembers[i],
+          'houses' : newResident.houses
+        });
+        print("La casa $houseId se le añadio a ${newResident.uid}");
+        print(response);
+      }
+    }
+    
+    print("Eliminando usuarios");
+    for(var j = 0; j < previousUsersId.length; j++) {
+      if(!updatedMembers.contains(previousUsersId[j])) {
+        User newResident = _usuarios.firstWhere((element) => element.uid == previousUsersId[j]);
+        newResident.houses.remove(houseId);
+        var response = await client.put(uriUserHouses, {
+          'uid' : previousUsersId[j],
+          'houses' : newResident.houses
+        });
+        print("La casa $houseId se elimino de ${newResident.uid}");
+        print(response);
+      }
+    }
+
   }
 }

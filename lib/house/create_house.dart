@@ -108,7 +108,7 @@ class _CreateHouseState extends State<CreateHouse> {
                         Container(
                           width: width - 20,
                           child: Text(
-                            "Tituo",
+                            "Titulo",
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               fontSize: 18,
@@ -327,9 +327,10 @@ class _CreateHouseState extends State<CreateHouse> {
                   cost: int.parse(_costoController.text),
                   roommatesLimit: int.parse(_habitantesController.text),
                   roommatesCount:
-                      widget.house == null ? 0 : widget.house.roommatesCount,
+                      widget.house == null ? 0 : widget.house.members.length,
                   playlistUrl: '',
                   foto: imageURL,
+                  members: widget.house == null ? [] : widget.house.members
                 );
                 bool isNew = widget.house == null;
                 _houseBloc.add(HouseSaveEvent(
@@ -378,6 +379,7 @@ class _CreateHouseState extends State<CreateHouse> {
             }
           },
           builder: (context, state) {
+            print(state);
             if (state is HouseFetchedState) {
               _titleController.text = state.house.title;
               _costoController.text = state.house.cost.toString();
