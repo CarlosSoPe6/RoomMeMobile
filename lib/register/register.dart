@@ -49,6 +49,7 @@ class _RegisterState extends State<Register> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Registro'),
+        automaticallyImplyLeading: false
       ),
       body: BlocProvider(
         create: (context) => MainBloc()..add(InitialEvent()),
